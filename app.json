@@ -20,11 +20,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/brand/adaptive-foreground.png",
         "backgroundColor": "#A74325"
-      }
+      },
+      "permissions": [
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
+      ]
     },
     "web": {
       "bundler": "metro",
-      "name": "Lilt \u2014 Your music, kept close",
+      "name": "Lilt — Your music, kept close",
       "shortName": "Lilt",
       "themeColor": "#F5F1E8",
       "backgroundColor": "#F5F1E8",
@@ -43,6 +48,11 @@
       "expo-document-picker",
       "expo-sqlite"
     ],
-    "icon": "./assets/brand/app-icon.png"
+    "icon": "./assets/brand/app-icon.png",
+    "extra": {
+      "eas": {
+        "projectId": "5936ba1c-3ef8-4f46-9976-755a3287c58c"
+      }
+    }
   }
 }

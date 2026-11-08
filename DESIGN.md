@@ -122,7 +122,7 @@ The palette combines warm paper neutrals with earthy action and status colors; e
 
 The shared hierarchy uses title, section, text, muted, and label roles from the frontmatter. Titles and sections use the display serif. Labels use semibold system text. Maintain these roles rather than introducing a separate marketing type system into utility screens.
 
-The wordmark uses the display face with tight tracking. Track titles truncate to one line, secondary artist text follows below, and durations use tabular numerals. The collection's first-import illustration has a larger local heading; it is a surface-specific expression rather than a new global display token.
+The wordmark is supplied as a brand image. Track titles truncate to one line, secondary artist text follows below, and durations use tabular numerals. The collection's first-import illustration has a larger local heading; it is a surface-specific expression rather than a new global display token.
 
 ## Layout
 
@@ -142,7 +142,7 @@ The system uses no cast shadows. Tonal surface changes, one-unit borders, and sp
 
 Rectangular controls are softly rounded, with the component-specific radii in the frontmatter. Icon buttons are circular. Collection tabs use an underline instead of pill containers. Track rows use subtle rounding plus bottom dividers; they are not individual floating cards.
 
-Sleeves use a square, softly rounded backing and concentric record circles. A stable name hash selects among five muted sleeve colors. This is a decorative placeholder, not imported album art. Its large variant has slightly tighter corners than the small variant. The small four-bar burnt-orange mark belongs beside the serif Lilt wordmark.
+Sleeves use a square, softly rounded backing and concentric record circles. A stable name hash selects among five muted sleeve colors. This is a decorative placeholder, not imported album art. Its large variant has slightly tighter corners than the small variant. Brand renders `assets/brand/logo.png` as a contained Image at (30 units) high in compact headers and (38 units) otherwise, preserving its (285:114) aspect ratio; it exposes the image role and accessible label “Lilt”.
 
 ## Components
 
