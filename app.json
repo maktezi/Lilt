@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "Lilt",
+    "slug": "lilt",
+    "version": "0.1.0",
+    "scheme": "lilt",
+    "orientation": "default",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.lilt.player",
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "audio"
+        ]
+      }
+    },
+    "android": {
+      "package": "app.lilt.player",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/brand/adaptive-foreground.png",
+        "backgroundColor": "#A74325"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "name": "Lilt \u2014 Your music, kept close",
+      "shortName": "Lilt",
+      "themeColor": "#F5F1E8",
+      "backgroundColor": "#F5F1E8",
+      "favicon": "./assets/brand/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-audio",
+        {
+          "microphonePermission": false,
+          "recordAudioAndroid": false,
+          "enableBackgroundPlayback": true,
+          "enableBackgroundRecording": false
+        }
+      ],
+      "expo-document-picker",
+      "expo-sqlite"
+    ],
+    "icon": "./assets/brand/app-icon.png"
+  }
+}

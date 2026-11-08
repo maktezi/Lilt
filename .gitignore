@@ -1,0 +1,10 @@
+node_modules/
+.expo/
+dist/
+web-build/
+android/
+ios/
+test-results/
+playwright-report/
+*.log
+.DS_Store

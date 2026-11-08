@@ -1,0 +1,14 @@
+node_modules/
+.expo/
+.git/
+.idea/
+.impeccable/
+dist/
+web-build/
+android/
+ios/
+test-results/
+playwright-report/
+assets/brand/approved-concept.png
+*.log
+.DS_Store
