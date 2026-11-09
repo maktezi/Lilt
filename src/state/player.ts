@@ -81,8 +81,7 @@ export function usePlayer() {
   }, [status.currentTime, status.playing, status.currentIndex]);
   useEffect(() => {
     const subscription = AppState.addEventListener('change', state => { if (state !== 'active') persist(); });
-    if (typeof window !== 'undefined') window.addEventListener('pagehide', persist);
-    return () => { subscription.remove(); if (typeof window !== 'undefined') window.removeEventListener('pagehide', persist); };
+    return () => subscription.remove();
   }, [persist]);
   useEffect(() => {
     if (status.duration > 0 && current && Math.abs(current.duration - status.duration) > 1) {

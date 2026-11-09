@@ -6,7 +6,7 @@ colors:
   surface: "#FCFAF5"
   rail: "#EDE8DC"
   ink: "#292E27"
-  muted: "#687062"
+  muted: "#60685B"
   line: "#DADACE"
   accent: "#A74325"
   accent-soft: "#F1DED2"
@@ -118,7 +118,7 @@ The palette combines warm paper neutrals with earthy action and status colors; e
 
 ## Typography
 
-**Display Font:** Source Serif 4 loaded as `CollectionSerif` on web; Georgia on iOS; platform serif on Android. **Body Font:** platform default sans serif. Font-family values are platform-selected in `src/ui/theme.ts`; no single cross-platform family token is asserted.
+**Display Font:** Source Serif 4 loaded as `CollectionSerif` on web; Georgia on iOS; platform serif on Android. **Body Font:** platform default sans serif. Font-family values are platform-selected in `src/ui/theme.tsx`; no single cross-platform family token is asserted.
 
 The shared hierarchy uses title, section, text, muted, and label roles from the frontmatter. Titles and sections use the display serif. Labels use semibold system text. Maintain these roles rather than introducing a separate marketing type system into utility screens.
 
@@ -187,3 +187,9 @@ Empty states pair a muted line icon on a circular shelf-ivory backing with a ser
 - **Don't** add cast shadows or floating cards as the default hierarchy treatment.
 - **Don't** promote one surface's welcome composition or oversized heading into a universal screen template.
 - **Don't** treat this source-derived document as evidence of rendered or physical-device acceptance.
+
+## Appearance
+
+Settings offers Device default (the initial choice), Light, and Dark. Preferences are stored independently of library data in native SQLite key-value storage and browser localStorage. Device default responds to OS appearance changes while the app is open; explicit choices override them.
+
+Dark mode uses warm charcoal canvas (#171916), elevated surfaces (#20231E), soft ivory text (#F3F1E8), sage secondary text (#B6BEAE), and a warm peach accent (#F0AA8B). The logo and Lottie download animation share the active accent; action text uses a dedicated on-accent color. Palette definitions live in src/core/appearance.ts, and themed components consume the provider in src/ui/theme.tsx. All body and secondary text pairs are checked for at least 4.5:1 contrast.

@@ -67,14 +67,40 @@ export class LibraryStore {
     }
     this.publish({ importing: false, notice: `${added} ${added === 1 ? 'track' : 'tracks'} imported${duplicates ? ` · ${duplicates} duplicates skipped` : ''}${failed ? ` · ${failed} failed. ${lastError}` : ''}.` });
   }
-  async enqueue(input: string, playlistId?: string) {
+  async enqueue(input: string, playlistId?: string, filename?: string) {
+    return (await this.enqueueJobs(input, playlistId, filename)).length;
+  }
+  private async enqueueJobs(input: string, playlistId?: string, filename?: string) {
     const sources = parseBatch(input), batchId = uid();
     const jobs: Job[] = sources.map((source, order) => {
       const id = uid(); this.liveUrls.set(id, source.url);
-      return { id, batchId, source: source.safeUrl, needsLink: source.needsLink, name: source.name, state: 'queued', received: 0, total: 0, playlistId, order, createdAt: Date.now() };
+      return { id, batchId, source: source.safeUrl, needsLink: source.needsLink, name: filename || source.name, state: 'queued', received: 0, total: 0, playlistId, order, createdAt: Date.now() };
     });
     await this.mutate(library => ({ ...library, jobs: [...jobs, ...library.jobs] }));
-    this.pump(); return jobs.length;
+    this.pump(); return jobs;
+  }
+  async downloadAndWait(url: string, filename: string, playlistId: string | undefined, signal: AbortSignal, onProgress: (job: Job) => void) {
+    if (signal.aborted) throw new Error('Cancelled');
+    const [queued] = await this.enqueueJobs(url, playlistId, filename);
+    return new Promise<void>((resolve, reject) => {
+      let finished = false, unsubscribe = () => {};
+      const finish = (error?: Error) => {
+        if (finished) return;
+        finished = true; unsubscribe(); signal.removeEventListener('abort', abort);
+        if (error) reject(error); else resolve();
+      };
+      const abort = () => { void this.cancel(queued.id).catch(error => finish(error)); };
+      const observe = () => {
+        const job = this.snapshot.library.jobs.find(job => job.id === queued.id);
+        if (!job) { finish(new Error('This transfer was removed.')); return; }
+        onProgress(job);
+        if (job.state === 'completed') finish();
+        else if (job.state === 'failed') finish(new Error(job.error || 'Download failed. Try again.'));
+        else if (job.state === 'cancelled') finish(new Error('Cancelled'));
+      };
+      unsubscribe = this.subscribe(observe); signal.addEventListener('abort', abort);
+      observe(); if (signal.aborted) abort();
+    });
   }
   async retry(id: string) {
     const job = this.snapshot.library.jobs.find(j => j.id === id);
@@ -116,7 +142,7 @@ export class LibraryStore {
       });
       if (controller.signal.aborted) return;
       await this.patchJob(job.id, { state: 'verifying' });
-      prepared = await this.adapter.prepare(file);
+      prepared = await this.adapter.prepare({ ...file, name: job.name });
       if (controller.signal.aborted) return;
       await this.commit(prepared, job.id, job.playlistId);
     } catch (error) {

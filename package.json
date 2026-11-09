@@ -16,22 +16,35 @@
     "test": "node --experimental-strip-types --test tests/*.test.ts",
     "test:ui": "playwright test"
   },
+  "expo": {
+    "autolinking": {
+      "android": {
+        "buildFromSource": ["expo-sqlite"]
+      }
+    }
+  },
   "dependencies": {
+    "@expo/vector-icons": "15.1.1",
+    "@lottiefiles/dotlottie-react": "^0.21.1",
     "expo": "58.0.23",
     "expo-audio": "58.0.11",
+    "expo-clipboard": "~58.0.4",
     "expo-crypto": "58.0.7",
     "expo-document-picker": "58.0.4",
     "expo-file-system": "58.0.13",
     "expo-font": "58.0.11",
-    "expo-sharing": "58.0.21",
-    "expo-sqlite": "58.0.14",
+    "expo-sharing": "58.0.22",
+    "expo-sqlite": "58.0.15",
     "expo-status-bar": "58.0.4",
-    "@expo/vector-icons": "15.1.1",
+    "expo-system-ui": "~58.0.7",
+    "lottie-react-native": "~7.5.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-native": "0.88.1",
     "react-native-safe-area-context": "5.11.1",
-    "react-native-web": "0.21.4"
+    "react-native-svg": "15.16.0",
+    "react-native-web": "0.21.4",
+    "react-native-webview": "14.0.1"
   },
   "devDependencies": {
     "@types/node": "26.6.6",

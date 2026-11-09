@@ -1,27 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, BackHandler, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, useWindowDimensions, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import { addToPlaylist, formatBytes, uid, type Playlist, type Track } from './core/model';
 import { libraryStore, useLibrary } from './state/library';
 import { usePlayer } from './state/player';
 import { storage } from './platform/storage';
 import { Brand, Button, Icon, IconButton, Sheet, Sleeve, type IconName } from './ui/components';
-import { colors as c, common as s } from './ui/theme';
+import { ThemeProvider, useTheme, useThemedStyles, type ThemeColors } from './ui/theme';
 import { Collection } from './ui/Collection';
 import { AddMusic } from './ui/AddMusic';
 import { Discover, Settings, Transfers } from './ui/Screens';
 import { Controls, NowPlaying, PlayerDock, Queue } from './ui/Player';
+import { DownloadDock } from './ui/DownloadDock';
+import { jobDownloadSummary, type DownloadSummary } from './core/download-status';
 
 type Tab = 'Collection' | 'Transfers' | 'Discover' | 'Settings';
 type Dialog = 'add' | 'player' | 'queue' | 'newPlaylist' | 'track' | 'editTrack' | 'addToPlaylist' | 'playlist' | 'confirmTrack' | 'confirmPlaylist' | 'confirmReset' | null;
 const navigation: { tab: Tab; icon: IconName }[] = [{ tab: 'Collection', icon: 'grid' }, { tab: 'Transfers', icon: 'download' }, { tab: 'Discover', icon: 'compass' }];
 
 export default function App() {
-  return <SafeAreaProvider><StatusBar style="dark" /><Lilt /></SafeAreaProvider>;
+  return <ThemeProvider><SafeAreaProvider><Lilt /></SafeAreaProvider></ThemeProvider>;
 }
 function Lilt() {
+  const { colors: c, common: s, isDark } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const { width } = useWindowDimensions(), wide = width >= 900, inspector = width >= 1360;
   const { library, ready, error, notice } = useLibrary();
   const [fontsLoaded] = useFonts(Platform.OS === 'web' ? { CollectionSerif: require('../assets/fonts/source-serif-4.woff2') } : {});
@@ -32,21 +35,31 @@ function Lilt() {
   const [name, setName] = useState(''), [artist, setArtist] = useState(''), [album, setAlbum] = useState('');
   const [formError, setFormError] = useState(''), [saving, setSaving] = useState(false);
   const [online, setOnline] = useState(true);
+  const [downloadSession, setDownloadSession] = useState<DownloadSummary | null>(null);
   const selectedPlaylist = library.playlists.find(p => p.id === playlistId);
   const selectedTrack = library.tracks.find(t => t.id === trackId);
   const activeJobs = library.jobs.filter(j => ['queued', 'downloading', 'verifying'].includes(j.state)).length;
+  const activeDownload = library.jobs.find(j => ['queued', 'downloading', 'verifying'].includes(j.state));
+  const dockDownload = downloadSession || (activeDownload ? jobDownloadSummary(activeDownload) : null);
+  const showDownloadDock = !!dockDownload && !(tab === 'Collection' && selectedPlaylist && dockDownload.playlistId === selectedPlaylist.id);
   useEffect(() => { void libraryStore.init(); }, []);
   useEffect(() => {
     if (Platform.OS !== 'web') return;
     document.title = 'Lilt — Your music, kept close';
-    const style = document.createElement('style');
-    style.textContent = `html,body,#root{height:100%;background:${c.canvas}}*{box-sizing:border-box}::selection{background:${c.accentSoft};color:${c.ink}}:focus-visible{outline:2px solid ${c.accent}!important;outline-offset:3px}input,textarea{outline:none;caret-color:${c.accent}}input:focus,textarea:focus{box-shadow:inset 0 0 0 2px ${c.accent}}::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#B8BEAE;border:2px solid ${c.canvas};border-radius:5px}button,[role=button]{touch-action:manipulation}a{color:${c.accent}}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}`;
-    document.head.appendChild(style);
     const update = () => setOnline(navigator.onLine); update();
     window.addEventListener('online', update); window.addEventListener('offline', update);
     if ('serviceWorker' in navigator && !__DEV__) void navigator.serviceWorker.register('/sw.js').catch(() => libraryStore.notify('Offline app setup failed. Reload while connected to try again.'));
-    return () => { style.remove(); window.removeEventListener('online', update); window.removeEventListener('offline', update); };
+    return () => { window.removeEventListener('online', update); window.removeEventListener('offline', update); };
   }, []);
+  useEffect(() => {
+    if (Platform.OS !== 'web') return;
+    const style = document.createElement('style');
+    style.textContent = `html,body,#root{height:100%;background:${c.canvas};color-scheme:${isDark ? 'dark' : 'light'}}*{box-sizing:border-box}::selection{background:${c.accentSoft};color:${c.ink}}:focus-visible{outline:2px solid ${c.accent}!important;outline-offset:3px}input,textarea{outline:none;caret-color:${c.accent}}input:focus,textarea:focus{box-shadow:inset 0 0 0 2px ${c.accent}}::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:${c.scrollbar};border:2px solid ${c.canvas};border-radius:5px}button,[role=button]{touch-action:manipulation}a{color:${c.accent}}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}`;
+    document.head.appendChild(style);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    meta?.setAttribute('content', c.canvas);
+    return () => style.remove();
+  }, [c, isDark]);
   useEffect(() => {
     const listener = BackHandler.addEventListener('hardwareBackPress', () => {
       if (dialog) { setDialog(null); return true; }
@@ -73,30 +86,31 @@ function Lilt() {
     finally { setSaving(false); }
   }
   function option(label: string, icon: IconName, action: () => void, danger = false) {
-    return <Pressable key={label} accessibilityRole="button" onPress={action} style={({ pressed, hovered }: { pressed: boolean; hovered?: boolean }) => [s.row, { gap: 14, minHeight: 52, paddingHorizontal: 10, borderRadius: 8, backgroundColor: pressed || hovered ? c.rail : 'transparent' }]}><Icon name={icon} color={danger ? c.danger : c.ink} /><Text style={[s.text, { color: danger ? c.danger : c.ink, flex: 1 }]}>{label}</Text><Icon name="chevron-right" color={c.muted} size={17} /></Pressable>;
+    return <Pressable key={label} accessibilityRole="button" accessibilityLabel={label} onPress={action} style={({ pressed, hovered }: { pressed: boolean; hovered?: boolean }) => [s.row, { gap: 14, minHeight: 52, paddingHorizontal: 10, borderRadius: 8, backgroundColor: pressed || hovered ? c.rail : 'transparent' }]}><Icon name={icon} color={danger ? c.danger : c.ink} /><Text style={[s.text, { color: danger ? c.danger : c.ink, flex: 1 }]}>{label}</Text><Icon name="chevron-right" color={c.muted} size={17} /></Pressable>;
   }
   if (!ready || !fontsLoaded) return <SafeAreaView style={[styles.app, { alignItems: 'center', justifyContent: 'center', gap: 24 }]}><Brand />{error ? <><Text accessibilityRole="alert" style={[s.text, { textAlign: 'center', padding: 24 }]}>{error}</Text><Button label="Try opening again" icon="refresh-cw" onPress={() => void libraryStore.init()} /></> : <ActivityIndicator color={c.accent} accessibilityLabel="Opening your collection" />}</SafeAreaView>;
 
   return <SafeAreaView style={styles.app} edges={['top', 'bottom', 'left', 'right']}>
     <View style={{ flex: 1, flexDirection: 'row', minHeight: 0 }}>
-      {wide && <View style={styles.rail}><View style={{ paddingHorizontal: 24, paddingTop: 26, paddingBottom: 42 }}><Brand /><Text style={[s.muted, { marginTop: 10, fontSize: 12 }]}>Your music, kept close.</Text></View><View style={{ gap: 7 }}>{navigation.map(item => <Pressable key={item.tab} accessibilityRole="tab" accessibilityState={{ selected: tab === item.tab }} onPress={() => go(item.tab)} style={[styles.navItem, { backgroundColor: tab === item.tab ? '#E0E3D4' : 'transparent' }]}><Icon name={item.icon} size={19} color={tab === item.tab ? c.ink : c.muted} /><Text style={[s.label, { color: tab === item.tab ? c.ink : c.muted, flex: 1 }]}>{item.tab}</Text>{item.tab === 'Transfers' && activeJobs > 0 && <Text style={{ color: c.accent, fontWeight: '600' }}>{activeJobs}</Text>}</Pressable>)}</View>
-        <View style={{ flex: 1, paddingTop: 34, paddingHorizontal: 12 }}><View style={[s.spread, { paddingLeft: 12 }]}><Text style={[s.muted, { fontSize: 12 }]}>YOUR PLAYLISTS</Text><IconButton name="plus" label="Create playlist" onPress={newPlaylist} /></View><ScrollView>{library.playlists.map(p => <Pressable key={p.id} accessibilityRole="button" onPress={() => { setTab('Collection'); setPlaylistId(p.id); }} style={[s.row, { gap: 12, minHeight: 48, paddingHorizontal: 12, borderRadius: 8, backgroundColor: playlistId === p.id ? '#E0E3D4' : 'transparent' }]}><Icon name="music" size={16} color={c.muted} /><Text numberOfLines={1} style={[s.muted, { flex: 1 }]}>{p.name}</Text></Pressable>)}{!library.playlists.length && <Text style={[s.muted, { paddingHorizontal: 12, fontSize: 12 }]}>A mix for every mood.</Text>}</ScrollView></View>
-        <View style={{ padding: 12, gap: 14 }}><View style={{ padding: 12, gap: 6 }}><View style={[s.row, { gap: 8 }]}><Icon name={online ? 'hard-drive' : 'wifi-off'} size={14} color={c.green} /><Text style={[s.label, { fontSize: 12 }]}>{online ? 'On this device' : 'You’re offline'}</Text></View><Text style={[s.muted, { fontSize: 12 }]}>{library.tracks.length} songs · {formatBytes(library.tracks.reduce((n, t) => n + t.size, 0))}</Text></View><Pressable accessibilityRole="button" onPress={() => go('Settings')} style={[styles.navItem, { marginHorizontal: 0, backgroundColor: tab === 'Settings' ? '#E0E3D4' : 'transparent' }]}><Icon name="settings" size={19} color={c.muted} /><Text style={s.muted}>Settings</Text></Pressable></View>
+      {wide && <View style={styles.rail}><View style={{ paddingHorizontal: 24, paddingTop: 26, paddingBottom: 42 }}><Brand /><Text style={[s.muted, { marginTop: 10, fontSize: 12 }]}>Your music, kept close.</Text></View><View style={{ gap: 7 }}>{navigation.map(item => <Pressable key={item.tab} accessibilityRole="tab" accessibilityState={{ selected: tab === item.tab }} onPress={() => go(item.tab)} style={[styles.navItem, { backgroundColor: tab === item.tab ? c.navActive : 'transparent' }]}><Icon name={item.icon} size={19} color={tab === item.tab ? c.ink : c.muted} /><Text style={[s.label, { color: tab === item.tab ? c.ink : c.muted, flex: 1 }]}>{item.tab}</Text>{item.tab === 'Transfers' && activeJobs > 0 && <Text style={{ color: c.accent, fontWeight: '600' }}>{activeJobs}</Text>}</Pressable>)}</View>
+        <View style={{ flex: 1, paddingTop: 34, paddingHorizontal: 12 }}><View style={[s.spread, { paddingLeft: 12 }]}><Text style={[s.muted, { fontSize: 12 }]}>YOUR PLAYLISTS</Text><IconButton name="plus" label="Create playlist" onPress={newPlaylist} /></View><ScrollView>{library.playlists.map(p => <Pressable key={p.id} accessibilityRole="button" accessibilityLabel={p.name} onPress={() => { setTab('Collection'); setPlaylistId(p.id); }} style={[s.row, { gap: 12, minHeight: 48, paddingHorizontal: 12, borderRadius: 8, backgroundColor: playlistId === p.id ? c.navActive : 'transparent' }]}><Icon name="music" size={16} color={c.muted} /><Text numberOfLines={1} style={[s.muted, { flex: 1 }]}>{p.name}</Text></Pressable>)}{!library.playlists.length && <Text style={[s.muted, { paddingHorizontal: 12, fontSize: 12 }]}>A mix for every mood.</Text>}</ScrollView></View>
+        <View style={{ padding: 12, gap: 14 }}><View style={{ padding: 12, gap: 6 }}><View style={[s.row, { gap: 8 }]}><Icon name={online ? 'hard-drive' : 'wifi-off'} size={14} color={c.green} /><Text style={[s.label, { fontSize: 12 }]}>{online ? 'On this device' : 'You’re offline'}</Text></View><Text style={[s.muted, { fontSize: 12 }]}>{library.tracks.length} songs · {formatBytes(library.tracks.reduce((n, t) => n + t.size, 0))}</Text></View><Pressable accessibilityRole="button" onPress={() => go('Settings')} style={[styles.navItem, { marginHorizontal: 0, backgroundColor: tab === 'Settings' ? c.navActive : 'transparent' }]}><Icon name="settings" size={19} color={c.muted} /><Text style={s.muted}>Settings</Text></Pressable></View>
       </View>}
       <View style={{ flex: 1, minWidth: 0 }}>
         {!wide && <View style={styles.mobileHeader}><Brand small /><View style={s.row}>{!online && <Icon name="wifi-off" size={17} color={c.muted} />}<IconButton name="settings" label="Settings" onPress={() => go('Settings')} /></View></View>}
         <View style={{ flex: 1, minHeight: 0 }}>
-          {tab === 'Collection' ? <Collection player={player} onAdd={() => setDialog('add')} onTrackOptions={trackOptions} onFavorite={favorite} onNewPlaylist={newPlaylist} selectedPlaylist={selectedPlaylist} onSelectPlaylist={setPlaylistId} onPlaylistOptions={p => { setPlaylistId(p.id); setName(p.name); setDialog('playlist'); }} /> : tab === 'Transfers' ? <Transfers onAdd={() => setDialog('add')} /> : tab === 'Discover' ? <Discover onAdd={() => setDialog('add')} /> : <Settings onReset={() => setDialog('confirmReset')} />}
+          {tab === 'Collection' ? <Collection downloadSession={downloadSession} onOpenDownload={jobId => { if (downloadSession && (!jobId || jobId === downloadSession.jobId)) setDialog('add'); else go('Transfers'); }} player={player} onAdd={() => setDialog('add')} onTrackOptions={trackOptions} onFavorite={favorite} onNewPlaylist={newPlaylist} selectedPlaylist={selectedPlaylist} onSelectPlaylist={setPlaylistId} onPlaylistOptions={p => { setPlaylistId(p.id); setName(p.name); setDialog('playlist'); }} /> : tab === 'Transfers' ? <Transfers onAdd={() => setDialog('add')} /> : tab === 'Discover' ? <Discover onAdd={() => setDialog('add')} /> : <Settings onReset={() => setDialog('confirmReset')} />}
         </View>
       </View>
       {inspector && player.current && <View style={styles.inspector}><View style={s.spread}><Text style={s.section}>On the turntable</Text><IconButton name="maximize-2" label="Expand player" onPress={() => setDialog('player')} /></View><View style={{ alignItems: 'center', marginTop: 22, marginBottom: 24 }}><Sleeve name={player.current.album === 'Unknown album' ? player.current.title : player.current.album} size={218} record /></View><Text style={s.section}>{player.current.title}</Text><Text style={[s.muted, { marginTop: 7, marginBottom: 24 }]}>{player.current.artist}</Text><Controls player={player} full /><View style={{ marginTop: 36, gap: 14 }}><View style={s.spread}><Text style={s.label}>Up next</Text><Button quiet label="View queue" onPress={() => setDialog('queue')} /></View>{player.queue.slice(player.status.currentIndex + 1, player.status.currentIndex + 4).map(t => <Pressable key={t.id} accessibilityRole="button" onPress={() => void player.playTracks(player.queue.map(q => q.id), player.queue.indexOf(t))} style={[s.row, { gap: 10 }]}><Sleeve name={t.title} size={40} /><View style={{ flex: 1 }}><Text style={s.label} numberOfLines={1}>{t.title}</Text><Text style={s.muted} numberOfLines={1}>{t.artist}</Text></View></Pressable>)}</View></View>}
     </View>
     {notice && <View accessibilityRole="alert" accessibilityLiveRegion="polite" style={[s.spread, { backgroundColor: c.ink, paddingLeft: 18, paddingRight: 5, paddingVertical: 4 }]}><Text style={[s.text, { color: c.surface, flex: 1 }]}>{notice}</Text><Pressable accessibilityRole="button" accessibilityLabel="Dismiss notification" onPress={() => libraryStore.notify(null)} style={{ width: 48, height: 48, alignItems: 'center', justifyContent: 'center' }}><Icon name="x" color={c.surface} size={18} /></Pressable></View>}
+    {showDownloadDock && dockDownload && <DownloadDock download={dockDownload} onOpen={() => { if (downloadSession) setDialog('add'); else go('Transfers'); }} />}
     <PlayerDock player={player} onExpand={() => setDialog('player')} onQueue={() => setDialog('queue')} />
     {!wide && <View style={styles.bottomNav}>{navigation.map(item => <Pressable key={item.tab} accessibilityRole="tab" accessibilityLabel={item.tab} accessibilityState={{ selected: tab === item.tab }} onPress={() => go(item.tab)} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 5, minHeight: 64 }}><Icon name={item.icon} color={tab === item.tab ? c.accent : c.muted} size={21} /><Text style={{ fontSize: 11, fontWeight: '600', color: tab === item.tab ? c.accent : c.muted }}>{item.tab}{item.tab === 'Transfers' && activeJobs ? ` (${activeJobs})` : ''}</Text></Pressable>)}</View>}
 
-    {dialog === 'add' && <AddMusic onClose={close} onTransfers={() => go('Transfers')} playlistId={selectedPlaylist?.id} />}
-    {dialog === 'player' && <NowPlaying player={player} onClose={close} onQueue={() => setDialog('queue')} onFavorite={() => player.current && favorite(player.current.id)} />}
+    <AddMusic visible={dialog === 'add'} onClose={close} onTransfers={() => go('Transfers')} onDownloadUpdate={setDownloadSession} playlistId={selectedPlaylist?.id} />
+    <NowPlaying visible={dialog === 'player'} player={player} onClose={close} onQueue={() => setDialog('queue')} onFavorite={() => player.current && favorite(player.current.id)} />
     {dialog === 'queue' && <Queue player={player} onClose={close} />}
     {dialog === 'confirmReset' && <Sheet title="Reset your local library?" onClose={close}><Text style={s.text}>All music saved in Lilt, playlists, favorites, and transfer history on this device will be removed. Your original imported files stay untouched.</Text><Button label="Remove all Lilt data" icon="trash-2" loading={saving} onPress={() => void submit(async () => { player.engine.pause(); await libraryStore.reset(); setPlaylistId(undefined); setTab('Collection'); })} /><Button secondary label="Keep my library" onPress={close} />{formError && <Text accessibilityRole="alert" style={{ color: c.danger }}>{formError}</Text>}</Sheet>}
     {dialog === 'newPlaylist' && <Sheet title="A new playlist" onClose={close}><Text style={s.muted}>Give your next soundtrack a name.</Text><TextInput accessibilityLabel="Playlist name" autoFocus value={name} onChangeText={setName} placeholder="Sunday kind of feeling" placeholderTextColor={c.muted} maxLength={100} style={s.input} /><Button label="Create playlist" loading={saving} icon="plus" onPress={() => void submit(async () => { if (!name.trim()) throw new Error('Give your playlist a name.'); const id = uid(); await libraryStore.mutate(l => ({ ...l, playlists: [...l.playlists, { id, name: name.trim(), trackIds: [], createdAt: Date.now() }] })); setTab('Collection'); setPlaylistId(id); })} />{formError && <Text accessibilityRole="alert" style={[s.text, { color: c.danger }]}>{formError}</Text>}</Sheet>}
@@ -117,11 +131,11 @@ function Lilt() {
     {(dialog === 'confirmTrack' || dialog === 'confirmPlaylist') && <Sheet title={dialog === 'confirmTrack' ? 'Delete this song?' : 'Delete this playlist?'} onClose={close}><Text style={s.text}>{dialog === 'confirmTrack' ? `“${selectedTrack?.title}” will be removed from Lilt and its playlists. The original file you imported stays untouched.` : `“${selectedPlaylist?.name}” will be removed. Its songs will stay in your library.`}</Text><Button label={dialog === 'confirmTrack' ? 'Delete song' : 'Delete playlist'} loading={saving} icon="trash-2" onPress={() => void submit(async () => { if (dialog === 'confirmTrack' && selectedTrack) { player.engine.pause(); await libraryStore.deleteTrack(selectedTrack.id); } else if (selectedPlaylist) { await libraryStore.mutate(l => ({ ...l, playlists: l.playlists.filter(p => p.id !== selectedPlaylist.id), jobs: l.jobs.map(j => j.playlistId === selectedPlaylist.id ? { ...j, playlistId: undefined } : j) })); setPlaylistId(undefined); } })} /><Button secondary label="Keep it" onPress={close} />{formError && <Text style={{ color: c.danger }}>{formError}</Text>}</Sheet>}
   </SafeAreaView>;
 }
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) => StyleSheet.create({
   app: { flex: 1, backgroundColor: c.canvas },
   rail: { width: 228, backgroundColor: c.rail, borderRightWidth: 1, borderRightColor: c.line },
   navItem: { minHeight: 50, flexDirection: 'row', alignItems: 'center', gap: 13, marginHorizontal: 12, paddingHorizontal: 14, borderRadius: 9 },
   mobileHeader: { minHeight: 66, paddingLeft: 22, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: c.line },
   bottomNav: { flexDirection: 'row', backgroundColor: c.surface, borderTopWidth: 1, borderTopColor: c.line },
-  inspector: { width: 304, padding: 24, borderLeftWidth: 1, borderLeftColor: c.line, backgroundColor: '#F0EDE3' },
+  inspector: { width: 304, padding: 24, borderLeftWidth: 1, borderLeftColor: c.line, backgroundColor: c.inspector },
 });

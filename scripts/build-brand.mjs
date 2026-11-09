@@ -10,7 +10,7 @@ function rasterize(svg, path, size) {
   const result = spawnSync('magick', ['-background', 'none', '-density', density, 'svg:-', '-resize', `${size}x${size}`, `PNG32:${path}`], { input: svg, encoding: 'utf8' });
   if (result.status !== 0) throw new Error(result.stderr || 'ImageMagick export failed');
 }
-const icon = (rounded = false, foregroundOnly = false) => `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">${foregroundOnly ? '' : `<rect width="1024" height="1024" rx="${rounded ? 232 : 0}" fill="#A74325"/>`}<g fill="#F7F5ED" transform="translate(${foregroundOnly ? '272 248' : '232 204'}) scale(${foregroundOnly ? '4.8' : '5.6'})">${geometry}</g></svg>`;
+const icon = (rounded = false, foregroundOnly = false) => `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">${foregroundOnly ? '' : `<rect width="1024" height="1024" rx="${rounded ? 232 : 0}" fill="#EF4B45"/>`}<g fill="#FFFFFF" transform="translate(${foregroundOnly ? '267 238' : '226 193'}) scale(${foregroundOnly ? '4.8' : '5.6'})">${geometry}</g></svg>`;
 await writeFile('assets/brand/app-icon.svg', icon());
 rasterize(await readFile('assets/brand/logo.svg', 'utf8'), 'assets/brand/logo.png', 1140);
 rasterize(mark, 'assets/brand/mark.png', 440);

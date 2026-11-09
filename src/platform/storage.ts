@@ -7,7 +7,9 @@ import { createAudioPlayer } from 'expo-audio';
 import type { StorageAdapter, PickedFile } from './types';
 import { MAX_BYTES, recoverLibrary, uid, type Library, type Track } from '../core/model';
 import { inspectAudio } from '../core/metadata';
+import { audioExtension, audioFilename, audioFileCandidates } from '../core/audio-files';
 const root = `${FS.documentDirectory}lilt/`;
+const audioPaths = new Map<string, string>();
 let database: Promise<SQLite.SQLiteDatabase> | undefined;
 async function db() {
   return database ??= (async () => {
@@ -26,8 +28,15 @@ export const storage: StorageAdapter = {
   async load() {
     const database = await db(), record = await database.getFirstAsync<{ data: string }>('SELECT data FROM library WHERE id=1');
     const library = recoverLibrary(record ? JSON.parse(record.data) : null);
-    library.tracks = await Promise.all(library.tracks.map(async t => ({ ...t, available: (await FS.getInfoAsync(`${root}${t.id}`)).exists })));
-    const known = new Set(library.tracks.map(t => t.id));
+    audioPaths.clear();
+    library.tracks = await Promise.all(library.tracks.map(async t => {
+      const uri = `${root}${audioFilename(t)}`, legacy = `${root}${t.id}`;
+      if (!(await FS.getInfoAsync(uri)).exists && (await FS.getInfoAsync(legacy)).exists) await FS.moveAsync({ from: legacy, to: uri });
+      const available = (await FS.getInfoAsync(uri)).exists;
+      if (available) audioPaths.set(t.id, uri);
+      return { ...t, available };
+    }));
+    const known = new Set(library.tracks.map(audioFilename));
     for (const path of await FS.readDirectoryAsync(root)) {
       if (path !== 'partial' && !known.has(path)) await FS.deleteAsync(`${root}${path}`, { idempotent: true });
     }
@@ -42,41 +51,55 @@ export const storage: StorageAdapter = {
     if (info.size > MAX_BYTES) throw new Error('This file exceeds the 100 MB per-track limit.');
     const bytes = await new File(file.uri).bytes();
     const metadata = inspectAudio(bytes, file.name);
-    const probe = createAudioPlayer({ uri: file.uri });
+    // AVFoundation uses the local path's extension to select its media reader.
+    // Downloads and document-provider URIs may have no (or a misleading) extension.
+    const id = uid(), staged = `${root}partial/${id}.${audioExtension(metadata.mime)}`;
+    if (await FS.getFreeDiskStorageAsync() < bytes.length + 1024 * 1024) throw new Error('Device storage is full. Free some space and retry.');
     try {
-      metadata.duration = await new Promise<number>((resolve, reject) => {
-        const timer = setTimeout(() => { subscription.remove(); reject(new Error('This audio file could not be decoded. Try another file.')); }, 12_000);
-        const subscription = probe.addListener('playbackStatusUpdate', status => {
-          if (status.error || status.isLoaded) {
-            clearTimeout(timer); subscription.remove();
-            if (status.error) reject(new Error('This audio file could not be decoded. Try another file.'));
-            else resolve(status.duration);
-          }
+      await FS.copyAsync({ from: file.uri, to: staged });
+      const probe = createAudioPlayer({ uri: staged });
+      try {
+        metadata.duration = await new Promise<number>((resolve, reject) => {
+          const timer = setTimeout(() => { subscription.remove(); reject(new Error('Audio validation timed out. Retry the download or try the fallback.')); }, 12_000);
+          const subscription = probe.addListener('playbackStatusUpdate', status => {
+            if (status.error || status.isLoaded) {
+              clearTimeout(timer); subscription.remove();
+              if (status.error) reject(new Error('The downloaded audio is damaged or uses an unsupported codec. Retry or try the fallback.'));
+              else resolve(status.duration);
+            }
+          });
+          if (probe.isLoaded) { clearTimeout(timer); subscription.remove(); resolve(probe.duration); }
         });
-        if (probe.isLoaded) { clearTimeout(timer); subscription.remove(); resolve(probe.duration); }
-      });
-    } finally { probe.remove(); }
-    const digest = await Crypto.digest(Crypto.CryptoDigestAlgorithm.SHA256, bytes);
-    const hash = [...new Uint8Array(digest)].map(b => b.toString(16).padStart(2, '0')).join('');
-    const track: Track = { ...metadata, id: uid(), hash, filename: file.name, size: bytes.length, addedAt: Date.now(), favorite: false, available: true };
-    if (await FS.getFreeDiskStorageAsync() < track.size + 1024 * 1024) throw new Error('Device storage is full. Free some space and retry.');
-    const staged = `${root}partial/${track.id}`;
-    await FS.copyAsync({ from: file.uri, to: staged });
-    return { track, uri: staged };
+      } finally { probe.remove(); }
+      const digest = await Crypto.digest(Crypto.CryptoDigestAlgorithm.SHA256, bytes);
+      const hash = [...new Uint8Array(digest)].map(b => b.toString(16).padStart(2, '0')).join('');
+      const track: Track = { ...metadata, id, hash, filename: file.name, size: bytes.length, addedAt: Date.now(), favorite: false, available: true };
+      return { track, uri: staged };
+    } catch (error) { await FS.deleteAsync(staged, { idempotent: true }).catch(() => {}); throw error; }
   },
   async commit(library, prepared) {
-    await FS.moveAsync({ from: prepared.uri!, to: `${root}${prepared.track.id}` });
-    try { await save(library); } catch (error) { await FS.deleteAsync(`${root}${prepared.track.id}`, { idempotent: true }); throw error; }
+    const uri = `${root}${audioFilename(prepared.track)}`;
+    await FS.moveAsync({ from: prepared.uri!, to: uri });
+    try { await save(library); audioPaths.set(prepared.track.id, uri); }
+    catch (error) { await FS.deleteAsync(uri, { idempotent: true }); throw error; }
   },
-  async remove(id, library) { await save(library); await FS.deleteAsync(`${root}${id}`, { idempotent: true }).catch(() => {}); },
+  async remove(id, library) {
+    await save(library); audioPaths.delete(id);
+    await Promise.all(audioFileCandidates(id).map(name => FS.deleteAsync(`${root}${name}`, { idempotent: true }).catch(() => {})));
+  },
   async reset(library) {
     await save(library);
+    audioPaths.clear();
     for (const filename of await FS.readDirectoryAsync(root)) if (filename !== 'partial') await FS.deleteAsync(`${root}${filename}`, { idempotent: true }).catch(() => {});
   },
   async resolve(id) {
-    const uri = `${root}${id}`;
-    if (!(await FS.getInfoAsync(uri)).exists) throw new Error('This audio file is missing. Import it again.');
-    return uri;
+    const cached = audioPaths.get(id);
+    if (cached && (await FS.getInfoAsync(cached)).exists) return cached;
+    for (const filename of audioFileCandidates(id)) {
+      const uri = `${root}${filename}`;
+      if ((await FS.getInfoAsync(uri)).exists) { audioPaths.set(id, uri); return uri; }
+    }
+    throw new Error('This audio file is missing. Import it again.');
   },
   release() {},
   async download(url, id, signal, onProgress) {
@@ -101,7 +124,7 @@ export const storage: StorageAdapter = {
       return { name, uri: result.uri };
     } finally { signal.removeEventListener('abort', abort); }
   },
-  async cleanup(id) { await FS.deleteAsync(`${root}partial/${id}`, { idempotent: true }); },
+  async cleanup(id) { await Promise.all(audioFileCandidates(id).map(name => FS.deleteAsync(`${root}partial/${name}`, { idempotent: true }))); },
   async exportTrack(track) {
     if (!(await Sharing.isAvailableAsync())) throw new Error('Sharing is unavailable on this device.');
     const source = await storage.resolve(track.id), name = track.filename.replace(/[^a-zA-Z0-9._ -]/g, '_');

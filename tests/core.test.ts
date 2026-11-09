@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { emptyLibrary, formatTime, matches, recoverLibrary, type Library, type Track } from '../src/core/model.ts';
 import { inspectAudio } from '../src/core/metadata.ts';
-import { parseBatch, parseSource } from '../src/core/sources.ts';
+import { parseBatch, parseSource, youtubeVideoLink } from '../src/core/sources.ts';
 import { LibraryStore } from '../src/core/library-store.ts';
 import { publicError } from '../src/core/errors.ts';
 import type { Prepared, StorageAdapter } from '../src/platform/types.ts';
@@ -16,6 +16,16 @@ function wave() {
   view.setUint16(32, 2, true); view.setUint16(34, 16, true); text(36, 'data'); view.setUint32(40, 32000, true); return bytes;
 }
 const pause = () => new Promise(resolve => setTimeout(resolve, 5));
+test('YouTube handoff validates video URLs and removes tracking without losing the video ID', () => {
+  const canonical = 'https://www.youtube.com/watch?v=qV-3UMfcWBc';
+  for (const link of [canonical, `${canonical}&list=private&token=secret`, 'https://youtu.be/qV-3UMfcWBc?si=tracking', 'https://m.youtube.com/watch?v=qV-3UMfcWBc', 'https://music.youtube.com/watch?v=qV-3UMfcWBc', 'https://youtube.com/shorts/qV-3UMfcWBc', 'https://youtube.com/live/qV-3UMfcWBc', 'https://www.youtube-nocookie.com/embed/qV-3UMfcWBc']) {
+    assert.equal(youtubeVideoLink(link), canonical);
+  }
+  for (const link of ['', 'not a link', 'https://youtube.com/playlist?list=example', 'https://youtube.com/watch?v=invalid', 'https://youtube.com.evil.test/watch?v=qV-3UMfcWBc', 'https://evil.test/qV-3UMfcWBc', 'https://user:pass@youtube.com/watch?v=qV-3UMfcWBc', `file:///watch?v=qV-3UMfcWBc`, `${canonical}\n${canonical}`]) {
+    assert.equal(youtubeVideoLink(link), null);
+  }
+  assert.throws(() => parseSource(canonical), /YouTube tab/);
+});
 async function until(check: () => boolean) {
   for (let i = 0; i < 300; i++) { if (check()) return; await pause(); }
   assert.fail('Expected asynchronous work did not finish');
@@ -78,6 +88,36 @@ test('imports skip exact duplicates and failed files while preserving good files
   const fake = fakeAdapter(), store = new LibraryStore(fake.adapter); await store.init();
   await store.importFiles([{ name: 'one.wav', uri: 'one' }, { name: 'one.wav', uri: 'one' }, { name: 'bad.wav', uri: 'bad' }]);
   assert.equal(store.getSnapshot().library.tracks.length, 1); assert.equal(fake.commits, 1); assert.match(store.getSnapshot().notice!, /1 duplicates skipped/); assert.match(store.getSnapshot().notice!, /1 failed/);
+});
+test('a converter result downloads, validates, saves, and joins the requested playlist automatically', async () => {
+  const seed = emptyLibrary(); seed.playlists.push({ id: 'youtube', name: 'YouTube songs', trackIds: [], createdAt: 1 });
+  const fake = fakeAdapter(seed), store = new LibraryStore(fake.adapter); await store.init();
+  await store.enqueue('https://cdn.example.com/result?token=secret', 'youtube', 'Converted song.mp3');
+  await until(() => store.getSnapshot().library.jobs[0].state === 'completed');
+  assert.equal(fake.commits, 1);
+  assert.equal(fake.saved.tracks[0].title, 'Converted song.mp3');
+  assert.deepEqual(fake.saved.playlists[0].trackIds, [fake.saved.tracks[0].id]);
+  assert.equal(fake.saved.jobs[0].source, 'https://cdn.example.com/result');
+  assert.equal(fake.saved.jobs[0].needsLink, true);
+});
+test('download screen waits for the durable commit and reports saving before completion', async () => {
+  const fake = fakeAdapter(), store = new LibraryStore(fake.adapter); await store.init();
+  const states: string[] = [];
+  await store.downloadAndWait('https://audio.test/song.wav', 'Song.wav', undefined, new AbortController().signal, job => states.push(job.state));
+  assert.ok(states.includes('downloading')); assert.ok(states.includes('verifying'));
+  assert.equal(states.at(-1), 'completed'); assert.equal(fake.commits, 1);
+});
+test('cancelling the download screen cancels its job and never saves the track', async () => {
+  const fake = fakeAdapter(), store = new LibraryStore(fake.adapter); await store.init();
+  const controller = new AbortController();
+  const task = store.downloadAndWait('https://audio.test/slow-song.wav', 'Song.wav', undefined, controller.signal, job => { if (job.state === 'downloading') controller.abort(); });
+  await assert.rejects(task, /Cancelled/);
+  await pause(); assert.equal(fake.commits, 0); assert.equal(store.getSnapshot().library.jobs[0].state, 'cancelled');
+});
+test('download screen receives transfer failures instead of showing a saved state', async () => {
+  const fake = fakeAdapter(), store = new LibraryStore(fake.adapter); await store.init(); fake.failures.add('bad.wav');
+  await assert.rejects(store.downloadAndWait('https://audio.test/bad.wav', 'Song.wav', undefined, new AbortController().signal, () => {}), /Network failure/);
+  assert.equal(fake.commits, 0);
 });
 test('batch completion order does not change playlist source order; concurrency is bounded', async () => {
   const seed = emptyLibrary(); seed.playlists.push({ id: 'playlist', name: 'Mix', trackIds: [], createdAt: 1 });
