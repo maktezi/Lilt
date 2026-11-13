@@ -6,20 +6,20 @@ test('appearance follows the device, allows overrides, and persists across reloa
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ colorScheme: 'dark' });
   await page.goto('/');
-  await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(23, 25, 22)');
+  await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(0, 0, 0)');
   await page.getByRole('button', { name: 'Settings', exact: true }).click();
-  await expect(page.getByRole('radio', { name: 'Device default' })).toBeChecked();
+  await expect(page.getByRole('radio', { name: 'Dark', exact: true })).toBeChecked();
   await page.getByRole('radio', { name: 'Light', exact: true }).click();
-  await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(245, 241, 232)');
+  await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(245, 245, 245)');
   await page.reload();
   await page.getByRole('button', { name: 'Settings', exact: true }).click();
   await expect(page.getByRole('radio', { name: 'Light', exact: true })).toBeChecked();
   await page.getByRole('radio', { name: 'Device default' }).click();
-  await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(23, 25, 22)');
+  await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(0, 0, 0)');
   await page.emulateMedia({ colorScheme: 'light' });
-  await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(245, 241, 232)');
+  await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(245, 245, 245)');
   await page.getByRole('radio', { name: 'Dark', exact: true }).click();
-  await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(23, 25, 22)');
+  await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(0, 0, 0)');
   await page.screenshot({ path: '.impeccable/review/dark-settings-web.png', fullPage: true, animations: 'disabled' });
   await page.getByRole('tab', { name: 'Collection', exact: true }).click();
   await page.getByRole('button', { name: 'Add music', exact: true }).click();
@@ -37,7 +37,7 @@ test('import, favorite, playlist, restart, and offline playback', async ({ page,
   await (await picker).setFiles({ name: 'Morning.wav', mimeType: 'audio/wav', buffer: wave() });
   await expect(page.getByRole('button', { name: 'Play Morning by Unknown artist' })).toBeVisible();
   await page.getByRole('button', { name: 'Favorite Morning', exact: true }).click();
-  await page.getByRole('dialog').getByRole('button', { name: 'Create playlist', exact: true }).click();
+  await page.getByRole('button', { name: 'Create playlist', exact: true }).click();
   await page.getByRole('textbox', { name: 'Playlist name', exact: true }).fill('Sunday songs');
   await page.getByRole('button', { name: 'Create playlist', exact: true }).last().click();
   await page.getByRole('button', { name: 'Back to collection' }).click();
@@ -95,7 +95,7 @@ test('YouTube entry validates links and fits a narrow screen', async ({ page }) 
   await page.getByRole('tab', { name: 'YouTube', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Copy video link' })).toBeDisabled();
   await page.getByRole('textbox', { name: 'YouTube video link' }).fill('https://youtube.com/playlist?list=test');
-  await expect(page.getByRole('alert')).toContainText('Paste one YouTube video link');
+  await expect(page.getByRole('alert')).toContainText('Paste a YouTube video or public playlist link');
   await expect(page.getByRole('button', { name: 'Copy video link' })).toBeDisabled();
   await expect(page.getByRole('button', { name: 'Open YTMP3 fallback' })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
@@ -165,7 +165,8 @@ test('playlist covers open a playlist whose main play button pauses and resumes'
   await expect(page.getByRole('button', { name: 'Play playlist', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Play playlist', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Pause playlist', exact: true })).toBeVisible();
-  await page.screenshot({ path: '.impeccable/review/playlist-detail-web.png', fullPage: true });
+  await expect(page.getByRole('heading', { name: 'Add music', exact: true, includeHidden: true })).toHaveCount(0);
+  await page.screenshot({ path: '.impeccable/review/playlist-detail-web.png', fullPage: true, animations: 'disabled' });
   await page.getByRole('button', { name: 'Back to collection', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Open playlist Late nights' })).toBeVisible();
   await page.screenshot({ path: '.impeccable/review/playlist-grid-web.png', fullPage: true });
@@ -202,4 +203,18 @@ for (const width of [360, 390, 768, 1440]) test(`collection fits at ${width}px`,
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
   expect(overflow).toBe(false);
   await page.screenshot({ path: `.impeccable/review/${width === 1440 ? 'desktop' : width === 390 ? 'mobile' : `user-${width}`}.png`, fullPage: true });
+});
+
+test('playlist links explain native batch downloads without converting only the selected video', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Add music', exact: true }).click();
+  await page.getByRole('tab', { name: 'Paste links', exact: true }).click();
+  await page.getByRole('textbox', { name: 'Direct audio links' }).fill('https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=PLabcdefghijk');
+  await expect(page.getByRole('tab', { name: 'YouTube', exact: true })).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByText('Download a whole playlist', { exact: true })).toBeVisible();
+  await expect(page.getByText(/Open Lilt on iOS or Android to download all songs automatically/)).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Open Flvto', exact: true })).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Open YTMP3 fallback', exact: true })).toBeDisabled();
+  await page.screenshot({ path: '.impeccable/review/youtube-playlist-web.png', fullPage: true, animations: 'disabled' });
 });

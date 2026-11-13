@@ -64,9 +64,8 @@ export function PlayerDock({ player, onExpand, onQueue }: { player: Player; onEx
         {track ? <PlayingAnimation playing={player.status.playing} size={48} /> : <View style={{ width: 48, height: 48, backgroundColor: c.rail, borderRadius: 8, alignItems: 'center', justifyContent: 'center' }}><Icon name="music" color={c.muted} /></View>}
         <View style={{ flex: 1 }}><Text numberOfLines={1} style={s.label}>{track?.title || 'Nothing playing'}</Text><Text numberOfLines={1} style={s.muted}>{player.loading ? 'Opening audio…' : track?.artist || 'A song will feel right here.'}</Text></View>
       </Pressable>
-      {wide && <View style={{ flex: 1.15, maxWidth: 560 }}><SeekBar player={player} /></View>}
-      {wide ? <Controls player={player} /> : <Pressable accessibilityRole="button" accessibilityLabel={player.status.playing ? 'Pause' : 'Play'} onPress={player.toggle} disabled={!track} style={{ width: 48, height: 48, alignItems: 'center', justifyContent: 'center' }}><Icon name={player.status.playing ? 'pause' : 'play'} color={track ? c.accent : c.muted} size={23} /></Pressable>}
-      <IconButton name="list" label="Open playback queue" onPress={onQueue} />
+      {wide ? <View style={{ flex: 1.4, maxWidth: 560 }}><Controls player={player} full /><SeekBar player={player} /></View> : <Pressable accessibilityRole="button" accessibilityLabel={player.status.playing ? 'Pause' : 'Play'} onPress={player.toggle} disabled={!track} style={{ width: 48, height: 48, alignItems: 'center', justifyContent: 'center' }}><Icon name={player.status.playing ? 'pause' : 'play'} color={track ? c.accent : c.muted} size={23} /></Pressable>}
+      <View style={[s.row, { flex: wide ? 1 : undefined, justifyContent: 'flex-end' }]}><IconButton name="list" label="Open playback queue" onPress={onQueue} /></View>
     </View>
   </View>;
 }

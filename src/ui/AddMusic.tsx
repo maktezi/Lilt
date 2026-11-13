@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Linking, Platform, Pressable, Text, TextInput, View } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
 import * as Clipboard from 'expo-clipboard';
@@ -7,6 +7,9 @@ import { converters, parseBatch, youtubeVideoLink } from '../core/sources';
 import { providerForQuality, type AudioQuality, type ConverterProvider } from '../core/converter';
 import type { DownloadSummary } from '../core/download-status';
 import { Converter } from './Converter';
+import { PlaylistDownload } from './PlaylistDownload';
+import { resolveYouTubePlaylist, youtubePlaylistLink, type YouTubePlaylist } from '../core/youtube-playlist';
+import { uid } from '../core/model';
 import { Button, Icon, Sheet } from './components';
 import { useTheme } from './theme';
 export function AddMusic({ visible, onClose, onTransfers, onDownloadUpdate, playlistId }: { visible: boolean; onClose: () => void; onTransfers: () => void; onDownloadUpdate: (summary: DownloadSummary | null) => void; playlistId?: string }) {
@@ -20,11 +23,35 @@ export function AddMusic({ visible, onClose, onTransfers, onDownloadUpdate, play
   const [converterPlaylistId, setConverterPlaylistId] = useState<string | undefined>();
   const [review, setReview] = useState<ReturnType<typeof parseBatch> | null>(null);
   const [busy, setBusy] = useState(false);
+  const [playlistReview, setPlaylistReview] = useState<YouTubePlaylist | null>(null);
+  const [playlistBatch, setPlaylistBatch] = useState<{ data: YouTubePlaylist; playlistId: string; quality: AudioQuality } | null>(null);
+  const resolving = useRef<AbortController | null>(null);
+  useEffect(() => () => resolving.current?.abort(), []);
+  const playlistLink = youtubePlaylistLink(youtubeInput);
   const playlist = library.playlists.find(p => p.id === playlistId);
   const videoLink = youtubeVideoLink(youtubeInput);
   function editLinks(text: string) {
     setInput(text); setReview(null); setError('');
-    if (youtubeVideoLink(text)) { setYoutubeInput(text); setMode('youtube'); setCopied(false); setOpened(null); }
+    if (youtubeVideoLink(text) || youtubePlaylistLink(text)) { setYoutubeInput(text); setMode('youtube'); setCopied(false); setOpened(null); }
+  }
+  async function reviewPlaylist() {
+    if (!playlistLink) return;
+    const controller = new AbortController(); resolving.current?.abort(); resolving.current = controller;
+    const timeout = setTimeout(() => controller.abort(), 90_000);
+    setBusy(true); setError(''); setPlaylistReview(null);
+    try { const result = await resolveYouTubePlaylist(playlistLink, controller.signal); if (resolving.current === controller && !controller.signal.aborted) setPlaylistReview(result); }
+    catch (e) { if (resolving.current === controller) setError(controller.signal.aborted ? 'Playlist loading stopped. Check your connection and retry.' : e instanceof Error ? e.message : 'Could not read this playlist.'); }
+    finally { clearTimeout(timeout); if (resolving.current === controller) { setBusy(false); resolving.current = null; } }
+  }
+  async function startPlaylist() {
+    if (!playlistReview) return;
+    setBusy(true); setError('');
+    try {
+      const destination = playlistId || uid();
+      if (!playlistId) await libraryStore.mutate(l => ({ ...l, playlists: [...l.playlists, { id: destination, name: playlistReview.title, trackIds: [], createdAt: Date.now() }] }));
+      setPlaylistBatch({ data: playlistReview, playlistId: destination, quality }); onClose();
+    } catch (e) { setError(e instanceof Error ? e.message : 'Could not create the playlist.'); }
+    finally { setBusy(false); }
   }
   async function copyVideoLink() {
     if (!videoLink) return;
@@ -54,6 +81,7 @@ export function AddMusic({ visible, onClose, onTransfers, onDownloadUpdate, play
     catch (e) { setError(e instanceof Error ? e.message : 'Could not start this batch.'); }
     finally { setBusy(false); }
   }
+  if (playlistBatch) return <PlaylistDownload batch={playlistBatch.data} quality={playlistBatch.quality} playlistId={playlistBatch.playlistId} visible={visible} onMinimize={onClose} onUpdate={onDownloadUpdate} onClose={() => { setPlaylistBatch(null); onDownloadUpdate(null); onClose(); }} />;
   if (converter && videoLink) return <Converter visible={visible} playlistId={converterPlaylistId} onMinimize={onClose} onUpdate={onDownloadUpdate} videoLink={videoLink} quality={quality} provider={converter} onClose={() => { setConverter(null); onClose(); }} onDone={() => { setConverter(null); onClose(); }} onDownload={async (url, filename, signal, progress) => {
     await libraryStore.downloadAndWait(url, filename, converterPlaylistId, signal, job => {
       progress({ phase: job.state === 'verifying' || job.state === 'completed' ? 'saving' : 'downloading', received: job.received, total: job.total, jobId: job.id });
@@ -66,18 +94,25 @@ export function AddMusic({ visible, onClose, onTransfers, onDownloadUpdate, play
       <View style={{ alignItems: 'center', padding: 24, gap: 16, borderWidth: 1, borderColor: c.line, borderStyle: 'dashed', borderRadius: 12 }}><Icon name="folder-plus" size={32} color={c.accent} /><Text style={[s.section, { textAlign: 'center' }]}>Make yourself at home.</Text><Text style={[s.muted, { textAlign: 'center' }]}>Choose MP3, M4A, or WAV files. Lilt saves its own copy and skips exact duplicates.</Text><Button label={importing ? 'Importing songs…' : 'Choose audio files'} icon="upload" onPress={() => void pick()} loading={importing} /></View>
       <Text style={s.muted}>Up to 100 MB per song. {Platform.OS === 'web' ? 'Files stay in this browser. Clearing site data removes them.' : 'Files stay in app storage. Uninstalling Lilt removes them.'}</Text>
     </> : mode === 'youtube' ? <>
-      <View style={{ gap: 6 }}><Text style={s.section}>From link to library</Text><Text style={s.muted}>{Platform.OS === 'web' ? 'Copy your video link, convert it in your browser, then return here to import the MP3.' : 'Paste a video link, choose audio quality, and save the song to your collection.'}</Text></View>
+      <View style={{ gap: 6 }}><Text style={s.section}>From link to library</Text><Text style={s.muted}>{Platform.OS === 'web' ? 'Copy your video link, convert it in your browser, then return here to import the MP3.' : 'Paste a video or public playlist link. Save one song or download the whole playlist in order.'}</Text></View>
       <View style={{ gap: 10 }}>
-        <Text style={s.label}>YouTube video link</Text>
-        <TextInput accessibilityLabel="YouTube video link" value={youtubeInput} onChangeText={text => { setYoutubeInput(text); setCopied(false); setOpened(null); setError(''); }} autoCapitalize="none" autoCorrect={false} keyboardType="url" placeholder="https://www.youtube.com/watch?v=…" placeholderTextColor={c.muted} style={s.input} />
-        {youtubeInput.trim() && !videoLink ? <Text accessibilityRole="alert" style={[s.muted, { color: c.danger }]}>Paste one YouTube video link. Playlist links need an individual video.</Text> : null}
+        <Text style={s.label}>YouTube video or playlist link</Text>
+        <TextInput accessibilityLabel="YouTube video link" value={youtubeInput} onChangeText={text => { resolving.current?.abort(); resolving.current = null; setBusy(false); setPlaylistReview(null); setYoutubeInput(text); setCopied(false); setOpened(null); setError(''); }} autoCapitalize="none" autoCorrect={false} keyboardType="url" placeholder="https://www.youtube.com/watch?v=…" placeholderTextColor={c.muted} style={s.input} />
+        {youtubeInput.trim() && !videoLink && !playlistLink ? <Text accessibilityRole="alert" style={[s.muted, { color: c.danger }]}>Paste a YouTube video or public playlist link.</Text> : null}
         {Platform.OS === 'web' ? <Button secondary label={copied ? 'Link copied — ready to paste' : 'Copy video link'} icon={copied ? 'check' : 'copy'} disabled={!videoLink} onPress={() => void copyVideoLink()} /> : null}
       </View>
+      {playlistLink && <View style={{ gap: 12, padding: 16, backgroundColor: c.rail, borderRadius: 12 }}>
+        <Text style={s.label}>Download a whole playlist</Text>
+        {Platform.OS === 'web' ? <Text style={s.muted}>Open Lilt on iOS or Android to download all songs automatically. Browser converters below accept individual video links; you can import multiple downloaded files together.</Text> : <>
+          <Text style={s.muted}>Load every page before downloading. Private, deleted, and unavailable videos are excluded. Keep Lilt open until the batch finishes.</Text>
+          {playlistReview ? <><Text style={s.section}>{playlistReview.title}</Text><Text style={s.muted}>{playlistReview.entries.length} songs · {playlistReview.unavailable} unavailable</Text>{playlistReview.entries.slice(0, 5).map((entry, i) => <Text key={entry.id} numberOfLines={1} style={s.text}>{i + 1}. {entry.title}</Text>)}{playlistReview.entries.length > 5 && <Text style={s.muted}>And {playlistReview.entries.length - 5} more</Text>}<Button label={`Download playlist · ${playlistReview.entries.length} songs`} icon="download" loading={busy} onPress={() => void startPlaylist()} /></> : <Button label="Load full playlist" icon="list" loading={busy} onPress={() => void reviewPlaylist()} />}
+        </>}
+      </View>}
       <View style={{ gap: 10 }}>
         {Platform.OS === 'web' ? <Text style={s.label}>Choose a converter</Text> : null}
         {Platform.OS === 'web' ? <Text style={s.muted}>{converters.flvto.quality}. For a smaller file, choose a lower bitrate.</Text> : <View style={{ gap: 10 }}><Text style={s.label}>MP3 quality</Text><View style={[s.row, { gap: 8, flexWrap: 'wrap' }]}>{([128, 192, 256, 320] as const).map(value => <Pressable key={value} accessibilityRole="radio" accessibilityLabel={`${value} kbps`} accessibilityState={{ checked: quality === value }} onPress={() => setQuality(value)} style={{ minHeight: 48, padding: 12, borderRadius: 10, backgroundColor: quality === value ? c.accent : c.rail }}><Text style={[s.label, { color: quality === value ? c.onAccent : c.ink }]}>{value} kbps</Text></Pressable>)}</View><Text style={s.muted}>Higher bitrates make larger files. If a source is unavailable, 192 kbps uses the alternate source directly.</Text></View>}
-        <Button label={Platform.OS === 'web' ? 'Open Flvto' : 'Download audio'} icon={Platform.OS === 'web' ? 'external-link' : 'download'} disabled={Platform.OS !== 'web' && !videoLink} onPress={() => openConverter(Platform.OS === 'web' ? 'flvto' : providerForQuality(quality))} />
-        {Platform.OS === 'web' ? <><Text style={s.muted}>Flvto unavailable? Try YTMP3. {converters.ytmp3.quality}.</Text><Button secondary label="Open YTMP3 fallback" icon="external-link" onPress={() => openConverter('ytmp3')} /></> : null}
+        <Button label={Platform.OS === 'web' ? 'Open Flvto' : 'Download audio'} icon={Platform.OS === 'web' ? 'external-link' : 'download'} disabled={!!playlistLink || (Platform.OS !== 'web' && !videoLink)} onPress={() => openConverter(Platform.OS === 'web' ? 'flvto' : providerForQuality(quality))} />
+        {Platform.OS === 'web' ? <><Text style={s.muted}>Flvto unavailable? Try YTMP3. {converters.ytmp3.quality}.</Text><Button secondary label="Open YTMP3 fallback" disabled={!!playlistLink} icon="external-link" onPress={() => openConverter('ytmp3')} /></> : null}
       </View>
       {Platform.OS === 'web' ? <View style={{ gap: 10, borderTopWidth: 1, borderTopColor: c.line, paddingTop: 20 }}>
         <Text style={s.label}>Bring the MP3 back to Lilt</Text>

@@ -15,9 +15,9 @@ export function Button({ label, icon, onPress, secondary = false, quiet = false,
   const styles = useThemedStyles(createStyles);
   const foreground = secondary || quiet ? c.ink : c.onAccent;
   return <Pressable accessibilityRole="button" accessibilityLabel={label} accessibilityState={{ disabled: disabled || loading }} disabled={disabled || loading} onPress={onPress}
-    style={({ pressed, hovered }: { pressed: boolean; hovered?: boolean }) => [styles.button, { backgroundColor: quiet ? 'transparent' : secondary ? c.rail : c.accent, opacity: disabled ? 0.45 : pressed ? 0.7 : hovered ? 0.88 : 1 }, style]}>
+    style={({ pressed, hovered }: { pressed: boolean; hovered?: boolean }) => [styles.button, { backgroundColor: quiet ? 'transparent' : secondary ? c.rail : c.accent, opacity: disabled ? 0.45 : pressed ? 0.8 : 1, transform: [{ scale: pressed ? 0.97 : hovered ? 1.035 : 1 }] }, style]}>
     {loading ? <ActivityIndicator color={foreground} size="small" /> : icon ? <Icon name={icon} size={18} color={foreground} /> : null}
-    <Text style={{ color: foreground, fontSize: 14, fontWeight: '600', lineHeight: 20 }}>{label}</Text>
+    <Text style={{ color: foreground, fontSize: 14, fontWeight: '700', lineHeight: 20 }}>{label}</Text>
   </Pressable>;
 }
 export function IconButton({ name, label, onPress, active = false, disabled = false, size = 20, badge }: { name: IconName; label: string; onPress: () => void; active?: boolean; disabled?: boolean; size?: number; badge?: string }) {
@@ -31,7 +31,7 @@ export function Brand({ small = false }: { small?: boolean }) {
   const height = small ? 30 : 38;
   return <Image source={require('../../assets/brand/logo.png')} accessibilityLabel="Lilt" accessibilityRole="image" resizeMode="contain" style={{ width: height * 285 / 114, height, tintColor: c.accent }} />;
 }
-const sleeves = ['#C5CDBA', '#D6B6A0', '#C7C7B7', '#B9C6C8', '#D1C393'];
+const sleeves = ['#377B69', '#9161B5', '#3A67A4', '#AC6048', '#8E8041'];
 export function Sleeve({ name = '', size = 52, record = false }: { name?: string; size?: number; record?: boolean }) {
   const { colors: c, common: s } = useTheme();
   const color = sleeves[[...name].reduce((sum, letter) => sum + letter.charCodeAt(0), 0) % sleeves.length];
@@ -59,7 +59,7 @@ export function Empty({ icon, title, detail, action }: { icon: IconName; title: 
   return <View style={{ alignItems: 'center', paddingVertical: 50, paddingHorizontal: 24, gap: 16 }}><View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: c.rail, alignItems: 'center', justifyContent: 'center' }}><Icon name={icon} size={26} color={c.muted} /></View><Text style={[s.section, { textAlign: 'center' }]}>{title}</Text><Text style={[s.muted, { textAlign: 'center', maxWidth: 330 }]}>{detail}</Text>{action}</View>;
 }
 const createStyles = (c: ThemeColors) => StyleSheet.create({
-  button: { minHeight: 48, borderRadius: 10, paddingVertical: 12, paddingHorizontal: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 9 },
+  button: { minHeight: 48, borderRadius: 26, paddingVertical: 12, paddingHorizontal: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 9 },
   iconButton: { width: 48, minHeight: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
   overlay: { flex: 1, justifyContent: Platform.OS === 'web' ? 'center' : 'flex-end', alignItems: 'center', backgroundColor: c.overlay, padding: Platform.OS === 'web' ? 16 : 0 },
   sheet: { backgroundColor: c.surface, width: '100%', maxHeight: '92%', borderRadius: 16, overflow: 'hidden' },

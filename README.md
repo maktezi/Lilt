@@ -1,6 +1,6 @@
 # Lilt
 
-A local-first music player for Android, iOS, and web, built with Expo SDK 58, React Native, and TypeScript. Lilt opens into a personal collection with warm ivory surfaces, ink typography, burnt-orange controls, and an expandable player.
+A local-first music player for Android, iOS, and web, built with Expo SDK 58, React Native, and TypeScript. Lilt opens into a personal collection with Spotify-style dark surfaces, bold sans-serif typography, green controls, and an expandable player.
 
 ## Run locally
 
@@ -72,7 +72,7 @@ The submission attempt could not reach `api.expo.dev` from the workspace sandbox
 
 ## Remaining product phases
 
-YouTube playlist acquisition, Spotify discovery/matching, and charts require provider access and authorization. No extraction service or fake provider results are included. Encrypted `.liltmusic` storage and seekable protected playback remain a native feasibility task; this preview stores normal audio files in app/browser storage and supports export. Accounts, cloud sync, subscriptions, artwork extraction, and localization are still pending.
+Spotify discovery/matching and charts require provider access and authorization. Public YouTube playlist downloading is implemented in the native app; live upstream conversion remains a device acceptance check. No extraction service or fake provider results are included. Encrypted `.liltmusic` storage and seekable protected playback remain a native feasibility task; this preview stores normal audio files in app/browser storage and supports export. Accounts, cloud sync, subscriptions, artwork extraction, and localization are still pending.
 
 Full requirements and delivery gates remain in [PRD.md](PRD.md). Current implementation lives in `src/`; no cloud backend is scaffolded.
 
@@ -87,3 +87,11 @@ Now Playing expands from the mini-player into a full-screen view with a down-arr
 Downloads auto-minimize into a compact circular progress indicator. Preparation workers remain mounted outside the download modal, so minimizing or navigating within Lilt does not cancel preparation, transfer, or saving. Cancel download remains a separate action. The destination playlist is captured when the download starts. Pending playlist entries show progress and become playable only after durable commit. When viewing that playlist, the bottom indicator is hidden to avoid showing the same download twice.
 
 Song rows require a double-click/double-tap to play; playback buttons remain single-tap, and keyboard/screen-reader activation stays directly accessible. Playlists use a cover grid and a cover/title/action header; their large button pauses/resumes the current playlist. Repeat-one is badged inside its button. The selected player music Lottie animates only during playback and pauses with playback or Reduce Motion.
+
+## Spotify-style interface and YouTube playlists
+
+New installations open in Dark appearance. Existing theme preferences are preserved. The updated UI includes dark desktop panels, an adaptive library rail, rounded filters, responsive playlist covers, centered transport/seek controls, hover/press feedback, and the existing animated full-screen player with Reduce Motion support. All local-library, queue, metadata, export, and direct-link download tools remain available.
+
+On iOS/Android, open Add music → YouTube and paste a public playlist URL (including a watch URL with a list parameter). Load full playlist reads all continuation pages, excludes unavailable videos, and reviews the total before downloading. Choose quality and download the playlist. Lilt creates a local destination unless you opened Add music within a playlist. Songs convert and save sequentially, with minimized progress, retry/fallback, skip, and retry-skipped controls. Original source order is preserved after retries. Exact duplicate videos are imported once. The batch stops at a failed conversion until you retry or skip it.
+
+Keep the app open during the batch. Pending conversion batches are held in memory; they do not resume after app termination. Saved songs remain durable. The browser explains native-only automatic playlist downloads and supports importing multiple downloaded files. No backend, credentials, or new conversion provider is introduced. Public-page changes and provider availability can break acquisition; fixture-based pagination tests do not establish successful live YouTube conversion.

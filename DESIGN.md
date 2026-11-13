@@ -1,28 +1,61 @@
 ---
 name: Lilt
-description: A warm, collection-first music player for personal offline listening.
+description: "A personal offline music library with a Spotify-style dark interface."
 colors:
-  canvas: "#F5F1E8"
-  surface: "#FCFAF5"
-  rail: "#EDE8DC"
-  ink: "#292E27"
-  muted: "#60685B"
-  line: "#DADACE"
-  accent: "#A74325"
-  accent-soft: "#F1DED2"
-  green: "#486449"
-  green-soft: "#E4EADF"
-  danger: "#A33226"
+  canvas: "#000000"
+  surface: "#121212"
+  rail: "#1F1F1F"
+  ink: "#FFFFFF"
+  muted: "#B3B3B3"
+  line: "#333333"
+  accent: "#1ED760"
+  on-accent: "#000000"
+  accent-soft: "#153A22"
+  green: "#1ED760"
+  green-soft: "#153A22"
+  danger: "#FF8C98"
   white: "#FFFFFF"
-  record: "#30372F"
+  record: "#181818"
+  nav-active: "#2A2A2A"
+  selected-track: "#24342A"
+  welcome: "#1B2D23"
+  sleeve-paper: "#284D36"
+  inspector: "#121212"
+  scrollbar: "#727272"
+  overlay: "rgba(0,0,0,0.75)"
+  light-canvas: "#F5F5F5"
+  light-surface: "#FFFFFF"
+  light-rail: "#EBEBEB"
+  light-ink: "#121212"
+  light-muted: "#575757"
+  light-line: "#D7D7D7"
+  light-accent: "#117537"
+  light-on-accent: "#FFFFFF"
+  light-accent-soft: "#D8F3E2"
+  light-green: "#117537"
+  light-green-soft: "#D8F3E2"
+  light-danger: "#B42332"
+  light-white: "#FFFFFF"
+  light-record: "#181818"
+  light-nav-active: "#DCDCDC"
+  light-selected-track: "#D8F3E2"
+  light-welcome: "#E5EBE7"
+  light-sleeve-paper: "#CCD9D1"
+  light-inspector: "#FFFFFF"
+  light-scrollbar: "#A0A0A0"
+  light-overlay: "rgba(0,0,0,0.6)"
 typography:
   title:
+    fontFamily: "Arial, Helvetica, sans-serif"
     fontSize: "36px"
     lineHeight: "44px"
+    fontWeight: 800
     letterSpacing: "-0.7px"
   section:
+    fontFamily: "Arial, Helvetica, sans-serif"
     fontSize: "23px"
     lineHeight: "30px"
+    fontWeight: 700
   text:
     fontSize: "15px"
     lineHeight: "23px"
@@ -33,35 +66,44 @@ typography:
     fontSize: "14px"
     lineHeight: "20px"
     fontWeight: 600
+  button:
+    fontSize: "14px"
+    lineHeight: "20px"
+    fontWeight: 700
 rounded:
-  button: "10px"
+  track: "6px"
+  cover-small: "7px"
+  card: "8px"
+  panel: "10px"
   input: "12px"
   sheet: "16px"
-  icon-button: "24px"
-  track: "6px"
+  icon: "24px"
+  button: "26px"
 spacing:
-  small: "8px"
-  row: "12px"
-  medium: "16px"
-  large: "24px"
-  section: "28px"
+  panel-gutter: "8px"
+  control-y: "12px"
+  filter-x: "16px"
+  control-x: "18px"
+  compact-page: "22px"
+  sheet-body: "24px"
+  wide-page: "40px"
 components:
   button-primary:
     backgroundColor: "{colors.accent}"
-    textColor: "{colors.surface}"
-    typography: "{typography.label}"
+    textColor: "{colors.on-accent}"
+    typography: "{typography.button}"
     rounded: "{rounded.button}"
     padding: "12px 18px"
   button-secondary:
     backgroundColor: "{colors.rail}"
     textColor: "{colors.ink}"
-    typography: "{typography.label}"
+    typography: "{typography.button}"
     rounded: "{rounded.button}"
     padding: "12px 18px"
   button-quiet:
     backgroundColor: "transparent"
     textColor: "{colors.ink}"
-    typography: "{typography.label}"
+    typography: "{typography.button}"
     rounded: "{rounded.button}"
     padding: "12px 18px"
   input:
@@ -69,127 +111,113 @@ components:
     textColor: "{colors.ink}"
     rounded: "{rounded.input}"
     padding: "13px 16px"
+  filter-selected:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.surface}"
+    rounded: "{rounded.icon}"
+    padding: "0px 16px"
+  filter:
+    backgroundColor: "{colors.rail}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.icon}"
+    padding: "0px 16px"
   sheet:
     backgroundColor: "{colors.surface}"
+    textColor: "{colors.ink}"
     rounded: "{rounded.sheet}"
+    width: "540px"
+  icon-button:
+    textColor: "{colors.ink}"
+    rounded: "{rounded.icon}"
+    width: "48px"
+  track:
+    textColor: "{colors.ink}"
+    rounded: "{rounded.track}"
+    padding: "0px 8px"
 ---
 
 # Design System: Lilt
 
 ## Overview
 
-**Creative North Star: "Record sleeve"**
+**Creative North Star: "Your music, kept close"**
 
-Lilt uses the warmth of a personal record collection: ivory surfaces, dark green ink, burnt-orange actions, serif headings, and compact song rows. The sleeve metaphor shapes typography, material color, and geometric artwork placeholders; playback and navigation retain familiar controls.
+The November 2026 redesign follows the user's Spotify-style brief, superseding the earlier ivory, serif, and terracotta direction. Lilt retains its own name, logo, local library, offline playback, import tools, and converter integrations. Near-black inset panels, bold sans-serif hierarchy, green actions, rounded filters, and dense song rows make this an operating surface for choosing, organizing, downloading, and playing music.
 
-The implemented system serves React Native on iOS and Android and React Native Web. This document records source-derived values and behavior, not a rendered acceptance review. Platform defaults supply body fonts and native text scaling.
+Dark appearance is the default for new installations. Existing appearance preferences remain honored, including Device default and Light. The shared implementation serves React Native on iOS and Android and React Native Web.
 
 **Key Characteristics:**
-- Warm ivory surfaces with ink text and selective burnt-orange emphasis.
-- Serif headings paired with practical system body text.
-- Flat tonal layers, fine dividers, and gently rounded controls.
-- Native safe areas and adaptive navigation around a persistent player dock.
-- Deterministic geometric sleeve placeholders and truthful empty states.
+
+- Near-black panels and bright green playback actions.
+- Bold sans-serif headings and practical, scalable body text.
+- Flat tonal layering around a persistent player.
+- Adaptive navigation and deterministic geometric sleeve placeholders.
+- Truthful empty, downloading, failed, and saved states.
 
 ## Colors
 
-The palette combines warm paper neutrals with earthy action and status colors; exact values live in the frontmatter.
+The primary palette combines black and neutral panels with a vivid green action color. The frontmatter records the implemented dark values; `light-` tokens record the alternate appearance. Source of truth: `src/core/appearance.ts`.
 
 ### Primary
-- **Burnt orange** (`accent`): primary actions, active collection tabs, active compact navigation, playback progress, and favorite states.
-- **Pale terracotta** (`accent-soft`): selected icon-control backgrounds and web text selection.
 
-### Secondary
-- **Library green** (`green`): local-storage reassurance and completed-transfer icons.
-- **Pale sage** (`green-soft`): completed-transfer badges and explanatory feature containers.
-- **Error red** (`danger`): failed-transfer messages, errors, and destructive option labels. Communicate the error in text as well.
+Use accent for playback, import actions, current-track titles, selected favorites, focus, and progress. Use on-accent for labels on solid accent buttons; accent-soft supports selected icon actions.
 
 ### Neutral
-- **Ivory canvas** (`canvas`): application background.
-- **Warm paper** (`surface`): player dock, dialogs, form fields, and foreground text on orange buttons.
-- **Shelf ivory** (`rail`): desktop navigation, search background, secondary buttons, and hover feedback.
-- **Green ink** (`ink`): headings and primary text.
-- **Sage gray** (`muted`): secondary text, metadata, and inactive icons.
-- **Paper seam** (`line`): dividers, input outlines, progress tracks, and structural borders.
-- **Record ink** (`record`): the disc inside sleeve placeholders.
-- **White** (`white`): retained source palette constant; not a replacement for the warm surfaces.
 
-**The Warm Paper Rule.** Use canvas, surface, and rail to establish hierarchy before adding decoration.
+Canvas separates the inset surface panels. Rail provides neutral controls and hover fills; ink supplies primary text, muted supplies secondary text, and line supplies fine separators. Selected-track, nav-active, welcome, and sleeve-paper are contextual fills. Overlay dims the background behind sheets; inspector and scrollbar follow the active appearance. White and record support the shared artwork treatment. Danger marks errors and destructive actions, and is a semantic status color rather than another brand accent.
+
+**The Shared Palette Rule.** Read colors from the active theme; pair every accent action with onAccent so both appearances remain readable.
+
+Body, secondary, primary-button, and status text contrast are covered by automated tests. Do not infer that arbitrary combinations of palette tokens are accessible.
 
 ## Typography
 
-**Display Font:** Source Serif 4 loaded as `CollectionSerif` on web; Georgia on iOS; platform serif on Android. **Body Font:** platform default sans serif. Font-family values are platform-selected in `src/ui/theme.tsx`; no single cross-platform family token is asserted.
+Use the bold sans-serif hierarchy in the frontmatter. Web display headings use Arial/Helvetica; native display headings use the platform sans-serif. Body and label roles inherit platform defaults. Native font scaling remains enabled. No external font load blocks opening the library.
 
-The shared hierarchy uses title, section, text, muted, and label roles from the frontmatter. Titles and sections use the display serif. Labels use semibold system text. Maintain these roles rather than introducing a separate marketing type system into utility screens.
-
-The wordmark is supplied as a brand image. Track titles truncate to one line, secondary artist text follows below, and durations use tabular numerals. The collection's first-import illustration has a larger local heading; it is a surface-specific expression rather than a new global display token.
+Page titles use title, section and sheet headings use section, explanatory text uses text, track artists and metadata use muted, and control or song labels use label. Shared button labels are heavier than label. Playlist headings adapt to compact (34/42) and desktop (42/50) layouts; these are contextual variants, not a new global scale. Durations use tabular numbers.
 
 ## Layout
 
-The application fills its viewport inside safe areas on all four edges. Below (900 units), a compact header and bottom tabs surround content; the player dock stays above the tabs. At and above (900 units), a left rail (228 units) replaces the compact navigation. At and above (1360 units), a listening inspector (304 units) appears when a current track exists.
+Desktop starts at 900 logical units with a 264-unit library rail, a rounded main panel separated by an 8-unit canvas gutter, and a persistent player beneath the panels. A 304-unit now-playing inspector appears from 1360 units. Desktop collection content uses 40-unit horizontal padding; compact content uses 22.
 
-Collection gutters expand from (22 units) to (40 units) at the wide breakpoint; collection top padding expands from (22 units) to (42 units). Utility pages use their existing (28-unit) padding. These are observed component values, not an imposed universal grid. Row gaps commonly use the spacing steps in the frontmatter, with smaller optical adjustments in controls.
+Compact layouts use the existing safe-area header, horizontally scrollable library filters, search, player dock, and bottom navigation. Keep the first-import copy and action visible without an oversized illustration. Full-screen player content is centered within a maximum width of 560 units and remains scrollable.
 
-Track rows have a minimum height of (72 units). Buttons and icon buttons provide at least (48-unit) targets. Navigation and form layouts wrap where implemented. Keep flex children shrinkable so long metadata can truncate without pushing controls offscreen.
-
-Sheets are bottom-aligned on native and centered on web, constrained to (92%) viewport height. Standard sheets cap at (540 units), with a wide variant at (680 units). The keyboard-avoiding container and sheet safe areas protect native form access.
+Playlist covers form an adaptive two-to-five-column grid with a 16-unit gap. The count follows available content width: more than 520 units uses three columns, more than 740 uses four, and more than 1000 uses five. Keep dense song rows flat with a minimum 72-unit height.
 
 ## Elevation & Depth
 
-The system uses no cast shadows. Tonal surface changes, one-unit borders, and spacing establish depth. Dialogs use a translucent dark scrim and a fade animation. Web text fields receive an inset accent focus treatment; this is a focus indicator, not a raised-surface style. No duration or easing token is established by the source.
+Depth comes from tonal panels, canvas gutters, contextual fills, fine dividers, and modal overlays. The shared components do not use cast shadows as their hierarchy system. Web input focus adds an inset accent ring; keyboard focus uses a 2px accent outline with a 3px offset.
 
 ## Shapes
 
-Rectangular controls are softly rounded, with the component-specific radii in the frontmatter. Icon buttons are circular. Collection tabs use an underline instead of pill containers. Track rows use subtle rounding plus bottom dividers; they are not individual floating cards.
-
-Sleeves use a square, softly rounded backing and concentric record circles. A stable name hash selects among five muted sleeve colors. This is a decorative placeholder, not imported album art. Its large variant has slightly tighter corners than the small variant. Brand renders `assets/brand/logo.png` as a contained Image at (30 units) high in compact headers and (38 units) otherwise, preserving its (285:114) aspect ratio; it exposes the image role and accessible label “Lilt”.
+Rounded ends identify buttons, search, and filters. Panels and cards use smaller corners; sheets use a stronger curve. Icon actions retain a circular 48-unit target. Text fields retain explicit labels, a fine border, and the input radius. Deterministic sleeves use 5-unit corners above 100 units and 7-unit corners at smaller sizes; circular records and grooves sit inside. Their saturated muted backing palette comes from `src/ui/components.tsx` and is decorative, not fetched album artwork.
 
 ## Components
 
-### Buttons
+Primary buttons use accent, bold on-accent labels, and the shared pill shape. Secondary buttons use rail, quiet buttons stay transparent, and both use ink. Hover scales shared buttons to 1.035; press scales to 0.97 with 0.8 opacity; disabled buttons use 0.45 opacity. Web state transitions last 160ms with ease-out. Reduce Motion disables web decorative transitions.
 
-Primary buttons combine burnt orange and warm-paper text; secondary buttons use shelf ivory and ink; quiet buttons have transparent backgrounds. All share semibold labels, centered horizontal contents, and optional line icons. Hover reduces opacity to (0.88), press to (0.7), and disabled to (0.45). Loading replaces the leading icon with an activity indicator and disables the action.
+Library filters use ink fills with surface labels when selected, and rail with ink otherwise. Search uses a rounded rail fill; forms use bordered surface fields. Song rows show source artwork placeholders, green current-track titles, favorite actions, duration, and overflow controls. Playlist cards reveal rail on hover and scale to 0.98 when pressed.
 
-Icon buttons use a circular (48-unit) target. Active state uses pale terracotta with an orange icon; hover or press uses shelf ivory. Disabled icon controls use (0.4) opacity. Web keyboard focus uses an accent outline (2px) with (3px) offset.
+**The Persistent Playback Rule.** Keep playback available while navigating, and minimize the full-screen player without pausing.
 
-### Inputs / Fields
+Desktop transport controls sit above the seek bar with shuffle, previous, play/pause, next, and repeat. Compact playback remains in the persistent dock. The full-screen player slides in and minimizes without pausing. Reduce Motion switches its transition to a fade, disables artwork scaling and decorative playback animation, and makes seek progress immediate. Regular seek progress interpolates over 300ms; play-button feedback and artwork scaling use source-defined springs. Their precise settings are recorded in the sidecar.
 
-Standard fields use warm paper, a one-unit paper-seam border, inset padding, and a minimum height of (50 units). Collection search is a separate shelf-ivory composition with a search icon, a (48-unit) text field, and an optional clear button. Web inputs show an inset orange focus stroke. Error copy appears beneath the related form or action in error red; do not imply success before persistence completes.
+Add music reviews all discovered pages of public YouTube playlists on native before starting. It creates a named local playlist unless a destination was selected, downloads sequentially, advances after durable commit, preserves source order including retries, offers retry/fallback/skip on failed conversions, and exposes progress in the existing minimized download dock. A finished batch lists saved, skipped, and unavailable entries and can retry skipped songs.
 
-### Navigation
+**The Durable Save Rule.** Show success only after the storage commit; progress and recovery actions must reflect application state.
 
-The desktop rail uses icon-and-label rows, with a sage-tinted active background. Compact tabs use orange text and icons when active. Collection filters use muted labels at rest, semibold orange text and a two-unit orange underline when selected. Settings remains in the compact header and the rail footer.
+Whole-playlist conversion requires the native app to remain open. Pending batches do not resume after process termination; saved songs and transfer history are durable. Web keeps manual converter handoff and multi-file imports and explicitly identifies native-only batches. Public page parsing and external converters remain upstream dependencies rather than an authenticated catalog integration.
 
-### Containers and sheets
-
-Containers remain flat and use tonal fills selectively for introductory or explanatory content. Sheet headers pair a serif section title with a labeled close icon. Sheet bodies scroll and use generous vertical spacing; do not convert every list row into a card.
-
-### Track rows and player
-
-Rows combine an optional numeric index, geometric sleeve, title and artist, duration, favorite, and overflow controls. A selected row receives a pale sage fill and orange title. The dock remains visible even when empty, stating that nothing is playing and disabling playback. On wide layouts it includes the seek bar and transport controls; compact layouts retain play and queue actions. The expanded player uses a large sleeve and circular orange play control.
-
-### Empty states and sleeve placeholders
-
-Empty states pair a muted line icon on a circular shelf-ivory backing with a serif title, short practical explanation, and a relevant action. First import may use the larger sleeve composition. Show real library metadata after import; never fabricate songs, artists, cover art, provider connections, or successful transfers.
+Rendered web screenshots cover compact and desktop surfaces, populated playlists, full-screen playback, settings, and downloads. Unit coverage includes palette contrast, pagination, unavailable entries, duplicates, cancellation, partial-page failures, and source order after retries. Native JavaScript bundles passed, but no booted simulator was available. Browser evidence does not establish native hardware acceptance; live converter success remains unverified.
 
 ## Do's and Don'ts
 
-### Do:
-- **Do** preserve the ivory, ink, and burnt-orange identity across native and web surfaces.
-- **Do** use the shared typography roles and platform display-font selection.
-- **Do** retain safe areas, labeled controls, scalable text, and at least 48-unit action targets.
-- **Do** use truthful empty states and explicit unavailable, loading, error, and saved states.
-- **Do** carry the same deterministic sleeve treatment through lists, dock, and expanded player.
+- Do use the shared theme and typography roles across native and web.
+- Do retain safe areas, scalable text, accessible labels, keyboard operation, and minimum 48-unit action targets.
+- Do preserve collection order and truthful loading, error, unavailable, and saved states.
+- Do identify deterministic sleeves as placeholders rather than fetched album artwork.
 
-### Don't:
-- **Don't** replace the approved identity with a Spotify-style visual theme.
-- **Don't** fabricate artists, songs, artwork, connected providers, or transfer success.
-- **Don't** add cast shadows or floating cards as the default hierarchy treatment.
-- **Don't** promote one surface's welcome composition or oversized heading into a universal screen template.
-- **Don't** treat this source-derived document as evidence of rendered or physical-device acceptance.
-
-## Appearance
-
-Settings offers Device default (the initial choice), Light, and Dark. Preferences are stored independently of library data in native SQLite key-value storage and browser localStorage. Device default responds to OS appearance changes while the app is open; explicit choices override them.
-
-Dark mode uses warm charcoal canvas (#171916), elevated surfaces (#20231E), soft ivory text (#F3F1E8), sage secondary text (#B6BEAE), and a warm peach accent (#F0AA8B). The logo and Lottie download animation share the active accent; action text uses a dedicated on-accent color. Palette definitions live in src/core/appearance.ts, and themed components consume the provider in src/ui/theme.tsx. All body and secondary text pairs are checked for at least 4.5:1 contrast.
+- Don't restore the superseded ivory, serif, and terracotta direction.
+- Don't fabricate songs, artists, artwork, connected providers, or transfer success.
+- Don't use browser screenshots as proof of native simulator or hardware acceptance.
+- Don't promote the first-import welcome composition into a universal screen template.

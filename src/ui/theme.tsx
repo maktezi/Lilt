@@ -6,12 +6,12 @@ import { appearancePreference, resolvedAppearance, lightColors, darkColors, type
 import { preferences } from '../platform/preferences';
 export type { ThemeColors } from '../core/appearance';
 
-export const displayFont = Platform.select({ web: 'CollectionSerif', ios: 'Georgia', default: 'serif' });
+export const displayFont = Platform.select({ web: 'Arial, Helvetica, sans-serif', ios: 'System', default: 'sans-serif' });
 const createCommon = (colors: ThemeColors) => StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center' },
   spread: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 },
-  title: { fontSize: 36, lineHeight: 44, fontFamily: displayFont, color: colors.ink, letterSpacing: -0.7 },
-  section: { fontSize: 23, lineHeight: 30, fontFamily: displayFont, color: colors.ink },
+  title: { fontSize: 36, lineHeight: 44, fontWeight: '800', fontFamily: displayFont, color: colors.ink, letterSpacing: -0.7 },
+  section: { fontSize: 23, lineHeight: 30, fontWeight: '700', fontFamily: displayFont, color: colors.ink },
   text: { fontSize: 15, lineHeight: 23, color: colors.ink },
   muted: { fontSize: 14, lineHeight: 22, color: colors.muted },
   label: { fontSize: 14, lineHeight: 20, fontWeight: '600', color: colors.ink },
@@ -30,7 +30,7 @@ type ThemeContextValue = typeof themes.light & {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const device = useColorScheme();
-  const [preference, setCurrent] = useState<AppearancePreference>('system'), [ready, setReady] = useState(false), [error, setError] = useState<string | null>(null);
+  const [preference, setCurrent] = useState<AppearancePreference>('dark'), [ready, setReady] = useState(false), [error, setError] = useState<string | null>(null);
   const [reduceMotion, setReduceMotion] = useState(false);
   const serial = useRef<Promise<unknown>>(Promise.resolve());
   const mode = resolvedAppearance(preference, device);
@@ -43,7 +43,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, []);
   useEffect(() => {
     let active = true;
-    void preferences.get('lilt.appearance').then(value => { if (active) setCurrent(appearancePreference(value)); })
+    void preferences.get('lilt.appearance').then(value => { if (active) setCurrent(value === null || value === undefined ? 'dark' : appearancePreference(value)); })
       .catch(() => { if (active) setError('Could not read your appearance setting. Device default is active.'); })
       .finally(() => { if (active) setReady(true); });
     return () => { active = false; };

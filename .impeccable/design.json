@@ -1,161 +1,175 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-08T14:09:56.088835+00:00",
+  "generatedAt": "2026-11-13T07:52:05.302630+00:00",
   "title": "Design System: Lilt",
   "extensions": {
     "colorMeta": {
       "canvas": {
         "role": "neutral",
-        "displayName": "Ivory canvas",
+        "displayName": "Canvas",
         "tonalRamp": [
-          "oklch(15% 0.0032 86.8)",
-          "oklch(26% 0.0076 86.8)",
-          "oklch(38% 0.0114 86.8)",
-          "oklch(50% 0.0127 86.8)",
-          "oklch(62% 0.0127 86.8)",
-          "oklch(74% 0.0114 86.8)",
-          "oklch(86% 0.0076 86.8)",
-          "oklch(95% 0.0032 86.8)"
+          "oklch(15% 0.0000 0.0)",
+          "oklch(26% 0.0000 0.0)",
+          "oklch(38% 0.0000 0.0)",
+          "oklch(50% 0.0000 0.0)",
+          "oklch(62% 0.0000 0.0)",
+          "oklch(74% 0.0000 0.0)",
+          "oklch(86% 0.0000 0.0)",
+          "oklch(95% 0.0000 0.0)"
         ]
       },
       "surface": {
         "role": "neutral",
-        "displayName": "Warm paper",
+        "displayName": "Surface",
         "tonalRamp": [
-          "oklch(15% 0.0017 88.6)",
-          "oklch(26% 0.0042 88.6)",
-          "oklch(38% 0.0062 88.6)",
-          "oklch(50% 0.0069 88.6)",
-          "oklch(62% 0.0069 88.6)",
-          "oklch(74% 0.0062 88.6)",
-          "oklch(86% 0.0042 88.6)",
-          "oklch(95% 0.0017 88.6)"
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(50% 0.0000 89.9)",
+          "oklch(62% 0.0000 89.9)",
+          "oklch(74% 0.0000 89.9)",
+          "oklch(86% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
         ]
       },
       "rail": {
         "role": "neutral",
-        "displayName": "Shelf ivory",
+        "displayName": "Rail",
         "tonalRamp": [
-          "oklch(15% 0.0042 88.0)",
-          "oklch(26% 0.0101 88.0)",
-          "oklch(38% 0.0152 88.0)",
-          "oklch(50% 0.0169 88.0)",
-          "oklch(62% 0.0169 88.0)",
-          "oklch(74% 0.0152 88.0)",
-          "oklch(86% 0.0101 88.0)",
-          "oklch(95% 0.0042 88.0)"
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(50% 0.0000 89.9)",
+          "oklch(62% 0.0000 89.9)",
+          "oklch(74% 0.0000 89.9)",
+          "oklch(86% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
         ]
       },
       "ink": {
         "role": "neutral",
-        "displayName": "Green ink",
+        "displayName": "Ink",
         "tonalRamp": [
-          "oklch(15% 0.0036 136.7)",
-          "oklch(26% 0.0086 136.7)",
-          "oklch(38% 0.0129 136.7)",
-          "oklch(50% 0.0143 136.7)",
-          "oklch(62% 0.0143 136.7)",
-          "oklch(74% 0.0129 136.7)",
-          "oklch(86% 0.0086 136.7)",
-          "oklch(95% 0.0036 136.7)"
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(50% 0.0000 89.9)",
+          "oklch(62% 0.0000 89.9)",
+          "oklch(74% 0.0000 89.9)",
+          "oklch(86% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
         ]
       },
       "muted": {
         "role": "neutral",
-        "displayName": "Sage gray",
+        "displayName": "Muted",
         "tonalRamp": [
-          "oklch(15% 0.0059 131.7)",
-          "oklch(26% 0.0141 131.7)",
-          "oklch(38% 0.0211 131.7)",
-          "oklch(50% 0.0235 131.7)",
-          "oklch(62% 0.0235 131.7)",
-          "oklch(74% 0.0211 131.7)",
-          "oklch(86% 0.0141 131.7)",
-          "oklch(95% 0.0059 131.7)"
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(50% 0.0000 89.9)",
+          "oklch(62% 0.0000 89.9)",
+          "oklch(74% 0.0000 89.9)",
+          "oklch(86% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
         ]
       },
       "line": {
         "role": "neutral",
-        "displayName": "Paper seam",
+        "displayName": "Line",
         "tonalRamp": [
-          "oklch(15% 0.0040 106.7)",
-          "oklch(26% 0.0097 106.7)",
-          "oklch(38% 0.0146 106.7)",
-          "oklch(50% 0.0162 106.7)",
-          "oklch(62% 0.0162 106.7)",
-          "oklch(74% 0.0146 106.7)",
-          "oklch(86% 0.0097 106.7)",
-          "oklch(95% 0.0040 106.7)"
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(50% 0.0000 89.9)",
+          "oklch(62% 0.0000 89.9)",
+          "oklch(74% 0.0000 89.9)",
+          "oklch(86% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
         ]
       },
       "accent": {
         "role": "primary",
-        "displayName": "Burnt orange",
+        "displayName": "Accent",
         "tonalRamp": [
-          "oklch(15% 0.0275 37.1)",
-          "oklch(26% 0.0660 37.1)",
-          "oklch(38% 0.0990 37.1)",
-          "oklch(50% 0.1100 37.1)",
-          "oklch(62% 0.1100 37.1)",
-          "oklch(74% 0.0990 37.1)",
-          "oklch(86% 0.0660 37.1)",
-          "oklch(95% 0.0275 37.1)"
+          "oklch(15% 0.0531 148.7)",
+          "oklch(26% 0.1274 148.7)",
+          "oklch(38% 0.1911 148.7)",
+          "oklch(50% 0.2124 148.7)",
+          "oklch(62% 0.2124 148.7)",
+          "oklch(74% 0.1911 148.7)",
+          "oklch(86% 0.1274 148.7)",
+          "oklch(95% 0.0531 148.7)"
+        ]
+      },
+      "on-accent": {
+        "role": "neutral",
+        "displayName": "On accent",
+        "tonalRamp": [
+          "oklch(15% 0.0000 0.0)",
+          "oklch(26% 0.0000 0.0)",
+          "oklch(38% 0.0000 0.0)",
+          "oklch(50% 0.0000 0.0)",
+          "oklch(62% 0.0000 0.0)",
+          "oklch(74% 0.0000 0.0)",
+          "oklch(86% 0.0000 0.0)",
+          "oklch(95% 0.0000 0.0)"
         ]
       },
       "accent-soft": {
         "role": "primary",
-        "displayName": "Pale terracotta",
+        "displayName": "Accent soft",
         "tonalRamp": [
-          "oklch(15% 0.0066 54.5)",
-          "oklch(26% 0.0159 54.5)",
-          "oklch(38% 0.0239 54.5)",
-          "oklch(50% 0.0265 54.5)",
-          "oklch(62% 0.0265 54.5)",
-          "oklch(74% 0.0239 54.5)",
-          "oklch(86% 0.0159 54.5)",
-          "oklch(95% 0.0066 54.5)"
+          "oklch(15% 0.0151 152.8)",
+          "oklch(26% 0.0364 152.8)",
+          "oklch(38% 0.0545 152.8)",
+          "oklch(50% 0.0606 152.8)",
+          "oklch(62% 0.0606 152.8)",
+          "oklch(74% 0.0545 152.8)",
+          "oklch(86% 0.0364 152.8)",
+          "oklch(95% 0.0151 152.8)"
         ]
       },
       "green": {
-        "role": "secondary",
-        "displayName": "Library green",
+        "role": "primary",
+        "displayName": "Green",
         "tonalRamp": [
-          "oklch(15% 0.0136 145.5)",
-          "oklch(26% 0.0326 145.5)",
-          "oklch(38% 0.0489 145.5)",
-          "oklch(50% 0.0543 145.5)",
-          "oklch(62% 0.0543 145.5)",
-          "oklch(74% 0.0489 145.5)",
-          "oklch(86% 0.0326 145.5)",
-          "oklch(95% 0.0136 145.5)"
+          "oklch(15% 0.0531 148.7)",
+          "oklch(26% 0.1274 148.7)",
+          "oklch(38% 0.1911 148.7)",
+          "oklch(50% 0.2124 148.7)",
+          "oklch(62% 0.2124 148.7)",
+          "oklch(74% 0.1911 148.7)",
+          "oklch(86% 0.1274 148.7)",
+          "oklch(95% 0.0531 148.7)"
         ]
       },
       "green-soft": {
-        "role": "secondary",
-        "displayName": "Pale sage",
+        "role": "primary",
+        "displayName": "Green soft",
         "tonalRamp": [
-          "oklch(15% 0.0040 130.4)",
-          "oklch(26% 0.0096 130.4)",
-          "oklch(38% 0.0144 130.4)",
-          "oklch(50% 0.0160 130.4)",
-          "oklch(62% 0.0160 130.4)",
-          "oklch(74% 0.0144 130.4)",
-          "oklch(86% 0.0096 130.4)",
-          "oklch(95% 0.0040 130.4)"
+          "oklch(15% 0.0151 152.8)",
+          "oklch(26% 0.0364 152.8)",
+          "oklch(38% 0.0545 152.8)",
+          "oklch(50% 0.0606 152.8)",
+          "oklch(62% 0.0606 152.8)",
+          "oklch(74% 0.0545 152.8)",
+          "oklch(86% 0.0364 152.8)",
+          "oklch(95% 0.0151 152.8)"
         ]
       },
       "danger": {
-        "role": "secondary",
-        "displayName": "Error red",
+        "role": "neutral",
+        "displayName": "Danger",
         "tonalRamp": [
-          "oklch(15% 0.0275 29.6)",
-          "oklch(26% 0.0660 29.6)",
-          "oklch(38% 0.0990 29.6)",
-          "oklch(50% 0.1100 29.6)",
-          "oklch(62% 0.1100 29.6)",
-          "oklch(74% 0.0990 29.6)",
-          "oklch(86% 0.0660 29.6)",
-          "oklch(95% 0.0275 29.6)"
+          "oklch(15% 0.0348 14.3)",
+          "oklch(26% 0.0835 14.3)",
+          "oklch(38% 0.1253 14.3)",
+          "oklch(50% 0.1392 14.3)",
+          "oklch(62% 0.1392 14.3)",
+          "oklch(74% 0.1253 14.3)",
+          "oklch(86% 0.0835 14.3)",
+          "oklch(95% 0.0348 14.3)"
         ]
       },
       "white": {
@@ -174,52 +188,468 @@
       },
       "record": {
         "role": "neutral",
-        "displayName": "Record ink",
+        "displayName": "Record",
         "tonalRamp": [
-          "oklch(15% 0.0042 141.7)",
-          "oklch(26% 0.0101 141.7)",
-          "oklch(38% 0.0152 141.7)",
-          "oklch(50% 0.0168 141.7)",
-          "oklch(62% 0.0168 141.7)",
-          "oklch(74% 0.0152 141.7)",
-          "oklch(86% 0.0101 141.7)",
-          "oklch(95% 0.0042 141.7)"
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(50% 0.0000 89.9)",
+          "oklch(62% 0.0000 89.9)",
+          "oklch(74% 0.0000 89.9)",
+          "oklch(86% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
+        ]
+      },
+      "nav-active": {
+        "role": "neutral",
+        "displayName": "Nav active",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(50% 0.0000 89.9)",
+          "oklch(62% 0.0000 89.9)",
+          "oklch(74% 0.0000 89.9)",
+          "oklch(86% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
+        ]
+      },
+      "selected-track": {
+        "role": "neutral",
+        "displayName": "Selected track",
+        "tonalRamp": [
+          "oklch(15% 0.0069 156.9)",
+          "oklch(26% 0.0167 156.9)",
+          "oklch(38% 0.0250 156.9)",
+          "oklch(50% 0.0278 156.9)",
+          "oklch(62% 0.0278 156.9)",
+          "oklch(74% 0.0250 156.9)",
+          "oklch(86% 0.0167 156.9)",
+          "oklch(95% 0.0069 156.9)"
+        ]
+      },
+      "welcome": {
+        "role": "neutral",
+        "displayName": "Welcome",
+        "tonalRamp": [
+          "oklch(15% 0.0076 159.3)",
+          "oklch(26% 0.0181 159.3)",
+          "oklch(38% 0.0272 159.3)",
+          "oklch(50% 0.0302 159.3)",
+          "oklch(62% 0.0302 159.3)",
+          "oklch(74% 0.0272 159.3)",
+          "oklch(86% 0.0181 159.3)",
+          "oklch(95% 0.0076 159.3)"
+        ]
+      },
+      "sleeve-paper": {
+        "role": "neutral",
+        "displayName": "Sleeve paper",
+        "tonalRamp": [
+          "oklch(15% 0.0146 155.2)",
+          "oklch(26% 0.0350 155.2)",
+          "oklch(38% 0.0525 155.2)",
+          "oklch(50% 0.0584 155.2)",
+          "oklch(62% 0.0584 155.2)",
+          "oklch(74% 0.0525 155.2)",
+          "oklch(86% 0.0350 155.2)",
+          "oklch(95% 0.0146 155.2)"
+        ]
+      },
+      "inspector": {
+        "role": "neutral",
+        "displayName": "Inspector",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(50% 0.0000 89.9)",
+          "oklch(62% 0.0000 89.9)",
+          "oklch(74% 0.0000 89.9)",
+          "oklch(86% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
+        ]
+      },
+      "scrollbar": {
+        "role": "neutral",
+        "displayName": "Scrollbar",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(50% 0.0000 89.9)",
+          "oklch(62% 0.0000 89.9)",
+          "oklch(74% 0.0000 89.9)",
+          "oklch(86% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
+        ]
+      },
+      "overlay": {
+        "role": "neutral",
+        "displayName": "Overlay",
+        "tonalRamp": [
+          "oklch(15% 0.0000 0.0)",
+          "oklch(26% 0.0000 0.0)",
+          "oklch(38% 0.0000 0.0)",
+          "oklch(50% 0.0000 0.0)",
+          "oklch(62% 0.0000 0.0)",
+          "oklch(74% 0.0000 0.0)",
+          "oklch(86% 0.0000 0.0)",
+          "oklch(95% 0.0000 0.0)"
+        ]
+      },
+      "light-canvas": {
+        "role": "neutral",
+        "displayName": "Light canvas",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(50% 0.0000 89.9)",
+          "oklch(62% 0.0000 89.9)",
+          "oklch(74% 0.0000 89.9)",
+          "oklch(86% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
+        ]
+      },
+      "light-surface": {
+        "role": "neutral",
+        "displayName": "Light surface",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(50% 0.0000 89.9)",
+          "oklch(62% 0.0000 89.9)",
+          "oklch(74% 0.0000 89.9)",
+          "oklch(86% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
+        ]
+      },
+      "light-rail": {
+        "role": "neutral",
+        "displayName": "Light rail",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(50% 0.0000 89.9)",
+          "oklch(62% 0.0000 89.9)",
+          "oklch(74% 0.0000 89.9)",
+          "oklch(86% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
+        ]
+      },
+      "light-ink": {
+        "role": "neutral",
+        "displayName": "Light ink",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(50% 0.0000 89.9)",
+          "oklch(62% 0.0000 89.9)",
+          "oklch(74% 0.0000 89.9)",
+          "oklch(86% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
+        ]
+      },
+      "light-muted": {
+        "role": "neutral",
+        "displayName": "Light muted",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(50% 0.0000 89.9)",
+          "oklch(62% 0.0000 89.9)",
+          "oklch(74% 0.0000 89.9)",
+          "oklch(86% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
+        ]
+      },
+      "light-line": {
+        "role": "neutral",
+        "displayName": "Light line",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(50% 0.0000 89.9)",
+          "oklch(62% 0.0000 89.9)",
+          "oklch(74% 0.0000 89.9)",
+          "oklch(86% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
+        ]
+      },
+      "light-accent": {
+        "role": "primary",
+        "displayName": "Light accent",
+        "tonalRamp": [
+          "oklch(15% 0.0323 150.1)",
+          "oklch(26% 0.0774 150.1)",
+          "oklch(38% 0.1161 150.1)",
+          "oklch(50% 0.1290 150.1)",
+          "oklch(62% 0.1290 150.1)",
+          "oklch(74% 0.1161 150.1)",
+          "oklch(86% 0.0774 150.1)",
+          "oklch(95% 0.0323 150.1)"
+        ]
+      },
+      "light-on-accent": {
+        "role": "neutral",
+        "displayName": "Light on accent",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(50% 0.0000 89.9)",
+          "oklch(62% 0.0000 89.9)",
+          "oklch(74% 0.0000 89.9)",
+          "oklch(86% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
+        ]
+      },
+      "light-accent-soft": {
+        "role": "primary",
+        "displayName": "Light accent soft",
+        "tonalRamp": [
+          "oklch(15% 0.0091 158.0)",
+          "oklch(26% 0.0218 158.0)",
+          "oklch(38% 0.0326 158.0)",
+          "oklch(50% 0.0363 158.0)",
+          "oklch(62% 0.0363 158.0)",
+          "oklch(74% 0.0326 158.0)",
+          "oklch(86% 0.0218 158.0)",
+          "oklch(95% 0.0091 158.0)"
+        ]
+      },
+      "light-green": {
+        "role": "primary",
+        "displayName": "Light green",
+        "tonalRamp": [
+          "oklch(15% 0.0323 150.1)",
+          "oklch(26% 0.0774 150.1)",
+          "oklch(38% 0.1161 150.1)",
+          "oklch(50% 0.1290 150.1)",
+          "oklch(62% 0.1290 150.1)",
+          "oklch(74% 0.1161 150.1)",
+          "oklch(86% 0.0774 150.1)",
+          "oklch(95% 0.0323 150.1)"
+        ]
+      },
+      "light-green-soft": {
+        "role": "primary",
+        "displayName": "Light green soft",
+        "tonalRamp": [
+          "oklch(15% 0.0091 158.0)",
+          "oklch(26% 0.0218 158.0)",
+          "oklch(38% 0.0326 158.0)",
+          "oklch(50% 0.0363 158.0)",
+          "oklch(62% 0.0363 158.0)",
+          "oklch(74% 0.0326 158.0)",
+          "oklch(86% 0.0218 158.0)",
+          "oklch(95% 0.0091 158.0)"
+        ]
+      },
+      "light-danger": {
+        "role": "neutral",
+        "displayName": "Light danger",
+        "tonalRamp": [
+          "oklch(15% 0.0448 21.8)",
+          "oklch(26% 0.1076 21.8)",
+          "oklch(38% 0.1614 21.8)",
+          "oklch(50% 0.1793 21.8)",
+          "oklch(62% 0.1793 21.8)",
+          "oklch(74% 0.1614 21.8)",
+          "oklch(86% 0.1076 21.8)",
+          "oklch(95% 0.0448 21.8)"
+        ]
+      },
+      "light-white": {
+        "role": "neutral",
+        "displayName": "Light white",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(50% 0.0000 89.9)",
+          "oklch(62% 0.0000 89.9)",
+          "oklch(74% 0.0000 89.9)",
+          "oklch(86% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
+        ]
+      },
+      "light-record": {
+        "role": "neutral",
+        "displayName": "Light record",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(50% 0.0000 89.9)",
+          "oklch(62% 0.0000 89.9)",
+          "oklch(74% 0.0000 89.9)",
+          "oklch(86% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
+        ]
+      },
+      "light-nav-active": {
+        "role": "neutral",
+        "displayName": "Light nav active",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(50% 0.0000 89.9)",
+          "oklch(62% 0.0000 89.9)",
+          "oklch(74% 0.0000 89.9)",
+          "oklch(86% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
+        ]
+      },
+      "light-selected-track": {
+        "role": "neutral",
+        "displayName": "Light selected track",
+        "tonalRamp": [
+          "oklch(15% 0.0091 158.0)",
+          "oklch(26% 0.0218 158.0)",
+          "oklch(38% 0.0326 158.0)",
+          "oklch(50% 0.0363 158.0)",
+          "oklch(62% 0.0363 158.0)",
+          "oklch(74% 0.0326 158.0)",
+          "oklch(86% 0.0218 158.0)",
+          "oklch(95% 0.0091 158.0)"
+        ]
+      },
+      "light-welcome": {
+        "role": "neutral",
+        "displayName": "Light welcome",
+        "tonalRamp": [
+          "oklch(15% 0.0021 157.1)",
+          "oklch(26% 0.0050 157.1)",
+          "oklch(38% 0.0075 157.1)",
+          "oklch(50% 0.0083 157.1)",
+          "oklch(62% 0.0083 157.1)",
+          "oklch(74% 0.0075 157.1)",
+          "oklch(86% 0.0050 157.1)",
+          "oklch(95% 0.0021 157.1)"
+        ]
+      },
+      "light-sleeve-paper": {
+        "role": "neutral",
+        "displayName": "Light sleeve paper",
+        "tonalRamp": [
+          "oklch(15% 0.0044 159.1)",
+          "oklch(26% 0.0106 159.1)",
+          "oklch(38% 0.0160 159.1)",
+          "oklch(50% 0.0177 159.1)",
+          "oklch(62% 0.0177 159.1)",
+          "oklch(74% 0.0160 159.1)",
+          "oklch(86% 0.0106 159.1)",
+          "oklch(95% 0.0044 159.1)"
+        ]
+      },
+      "light-inspector": {
+        "role": "neutral",
+        "displayName": "Light inspector",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(50% 0.0000 89.9)",
+          "oklch(62% 0.0000 89.9)",
+          "oklch(74% 0.0000 89.9)",
+          "oklch(86% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
+        ]
+      },
+      "light-scrollbar": {
+        "role": "neutral",
+        "displayName": "Light scrollbar",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(50% 0.0000 89.9)",
+          "oklch(62% 0.0000 89.9)",
+          "oklch(74% 0.0000 89.9)",
+          "oklch(86% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
+        ]
+      },
+      "light-overlay": {
+        "role": "neutral",
+        "displayName": "Light overlay",
+        "tonalRamp": [
+          "oklch(15% 0.0000 0.0)",
+          "oklch(26% 0.0000 0.0)",
+          "oklch(38% 0.0000 0.0)",
+          "oklch(50% 0.0000 0.0)",
+          "oklch(62% 0.0000 0.0)",
+          "oklch(74% 0.0000 0.0)",
+          "oklch(86% 0.0000 0.0)",
+          "oklch(95% 0.0000 0.0)"
         ]
       }
     },
     "typographyMeta": {
       "title": {
-        "displayName": "Page title",
-        "purpose": "Platform serif page heading."
+        "displayName": "Title",
+        "purpose": "Bold page heading; web Arial/Helvetica and native platform sans-serif."
       },
       "section": {
         "displayName": "Section",
-        "purpose": "Platform serif section and sheet heading."
+        "purpose": "Bold section and sheet headings."
       },
       "text": {
-        "displayName": "Body",
-        "purpose": "System sans serif explanatory text."
+        "displayName": "Text",
+        "purpose": "Platform body text."
       },
       "muted": {
-        "displayName": "Metadata",
-        "purpose": "Secondary text and track artists."
+        "displayName": "Muted",
+        "purpose": "Secondary metadata and track artists."
       },
       "label": {
         "displayName": "Label",
         "purpose": "Semibold track titles and control labels."
+      },
+      "button": {
+        "displayName": "Button",
+        "purpose": "Bold shared button labels."
       }
     },
     "shadows": [],
     "motion": [
       {
-        "name": "modal-fade",
-        "value": "fade",
-        "purpose": "React Native Modal animationType; duration and easing are platform-owned."
+        "name": "web-state",
+        "value": "160ms ease-out",
+        "purpose": "Background, transform, opacity, and filter color transitions."
       },
       {
-        "name": "reduced-motion-web",
-        "value": "animation:none;transition:none",
-        "purpose": "Applied under prefers-reduced-motion: reduce on web."
+        "name": "seek-progress",
+        "value": "300ms linear",
+        "purpose": "Playback progress interpolation; immediate on jumps and Reduce Motion."
+      },
+      {
+        "name": "transport-press",
+        "value": "spring(damping:22,stiffness:280,mass:0.7)",
+        "purpose": "Scale 0.94 to 1; neutral scale with Reduce Motion."
+      },
+      {
+        "name": "artwork-scale",
+        "value": "spring(damping:24,stiffness:150,mass:0.9)",
+        "purpose": "Playing 1, paused 0.97; neutral scale with Reduce Motion."
+      },
+      {
+        "name": "full-screen-player",
+        "value": "slide; reduced-motion: fade",
+        "purpose": "Platform-owned modal transitions."
+      },
+      {
+        "name": "sheet",
+        "value": "fade",
+        "purpose": "Platform-owned modal transition."
       }
     ],
     "breakpoints": [
@@ -231,6 +661,12 @@
         "name": "inspector",
         "value": "1360px"
       }
+    ],
+    "notes": [
+      "Logical units on React Native; px values in web previews.",
+      "Tonal ramps are synthesized OKLCH panel aids, not additional shipping colors.",
+      "Component previews resolve the default dark JS theme to literals.",
+      "Web screenshots only; native bundles passed without a booted simulator. Live converter success remains unverified."
     ]
   },
   "components": [
@@ -238,94 +674,104 @@
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Shared primary button; source hover, pressed, disabled and web focus states.",
-      "html": "<button class=\"ds-btn ds-button-primary\">Add music</button>",
-      "css": ".ds-btn{min-height:48px;border:0;border-radius:10px;padding:12px 18px;display:inline-flex;align-items:center;justify-content:center;gap:9px;font:600 14px/20px system-ui;cursor:pointer}.ds-btn:hover{opacity:.88}.ds-btn:active{opacity:.7}.ds-btn:disabled{opacity:.45;cursor:default}.ds-btn:focus-visible{outline:2px solid #A74325;outline-offset:3px}.ds-button-primary{background:#A74325;color:#FCFAF5}"
+      "description": "Shared primary action; dark appearance preview.",
+      "html": "<button class=\"ds-btn ds-btn-primary\">Add music</button>",
+      "css": ".ds-btn{min-height:48px;border:0;border-radius:26px;padding:12px 18px;display:inline-flex;align-items:center;justify-content:center;gap:9px;font:700 14px/20px system-ui;cursor:pointer;transition:background-color 160ms ease-out,transform 160ms ease-out,opacity 160ms ease-out}.ds-btn:hover{transform:scale(1.035)}.ds-btn:active{transform:scale(.97);opacity:.8}.ds-btn:disabled{opacity:.45;cursor:default}.ds-btn:focus-visible{outline:2px solid #1ED760;outline-offset:3px}@media(prefers-reduced-motion:reduce){.ds-btn{transition:none}}.ds-btn-primary{background:#1ED760;color:#000000}"
     },
     {
       "name": "Secondary Button",
       "kind": "button",
       "refersTo": "button-secondary",
-      "description": "Shared secondary button; source hover, pressed, disabled and web focus states.",
-      "html": "<button class=\"ds-btn ds-button-secondary\">Add tracks</button>",
-      "css": ".ds-btn{min-height:48px;border:0;border-radius:10px;padding:12px 18px;display:inline-flex;align-items:center;justify-content:center;gap:9px;font:600 14px/20px system-ui;cursor:pointer}.ds-btn:hover{opacity:.88}.ds-btn:active{opacity:.7}.ds-btn:disabled{opacity:.45;cursor:default}.ds-btn:focus-visible{outline:2px solid #A74325;outline-offset:3px}.ds-button-secondary{background:#EDE8DC;color:#292E27}"
+      "description": "Shared secondary action; dark appearance preview.",
+      "html": "<button class=\"ds-btn ds-btn-secondary\">Add tracks</button>",
+      "css": ".ds-btn{min-height:48px;border:0;border-radius:26px;padding:12px 18px;display:inline-flex;align-items:center;justify-content:center;gap:9px;font:700 14px/20px system-ui;cursor:pointer;transition:background-color 160ms ease-out,transform 160ms ease-out,opacity 160ms ease-out}.ds-btn:hover{transform:scale(1.035)}.ds-btn:active{transform:scale(.97);opacity:.8}.ds-btn:disabled{opacity:.45;cursor:default}.ds-btn:focus-visible{outline:2px solid #1ED760;outline-offset:3px}@media(prefers-reduced-motion:reduce){.ds-btn{transition:none}}.ds-btn-secondary{background:#1F1F1F;color:#FFFFFF}"
     },
     {
       "name": "Quiet Button",
       "kind": "button",
       "refersTo": "button-quiet",
-      "description": "Shared quiet button; source hover, pressed, disabled and web focus states.",
-      "html": "<button class=\"ds-btn ds-button-quiet\">Play all</button>",
-      "css": ".ds-btn{min-height:48px;border:0;border-radius:10px;padding:12px 18px;display:inline-flex;align-items:center;justify-content:center;gap:9px;font:600 14px/20px system-ui;cursor:pointer}.ds-btn:hover{opacity:.88}.ds-btn:active{opacity:.7}.ds-btn:disabled{opacity:.45;cursor:default}.ds-btn:focus-visible{outline:2px solid #A74325;outline-offset:3px}.ds-button-quiet{background:transparent;color:#292E27}"
+      "description": "Shared quiet action; dark appearance preview.",
+      "html": "<button class=\"ds-btn ds-btn-quiet\">Play all</button>",
+      "css": ".ds-btn{min-height:48px;border:0;border-radius:26px;padding:12px 18px;display:inline-flex;align-items:center;justify-content:center;gap:9px;font:700 14px/20px system-ui;cursor:pointer;transition:background-color 160ms ease-out,transform 160ms ease-out,opacity 160ms ease-out}.ds-btn:hover{transform:scale(1.035)}.ds-btn:active{transform:scale(.97);opacity:.8}.ds-btn:disabled{opacity:.45;cursor:default}.ds-btn:focus-visible{outline:2px solid #1ED760;outline-offset:3px}@media(prefers-reduced-motion:reduce){.ds-btn{transition:none}}.ds-btn-quiet{background:transparent;color:#FFFFFF}"
     },
     {
       "name": "Text Field",
       "kind": "input",
       "refersTo": "input",
-      "description": "Editable metadata and playlist-name field.",
+      "description": "Labeled form field in dark appearance.",
       "html": "<input class=\"ds-field\" aria-label=\"Playlist name\" placeholder=\"Playlist name\" />",
-      "css": ".ds-field{min-height:50px;background:#FCFAF5;color:#292E27;border:1px solid #DADACE;border-radius:12px;padding:13px 16px;font:16px system-ui;caret-color:#A74325}.ds-field:focus{outline:none;box-shadow:inset 0 0 0 2px #A74325}.ds-field:focus-visible{outline:2px solid #A74325;outline-offset:3px}.ds-field::placeholder{color:#687062}"
+      "css": ".ds-field{min-height:50px;background:#121212;color:#FFFFFF;border:1px solid #333333;border-radius:12px;padding:13px 16px;font:16px system-ui;caret-color:#1ED760}.ds-field:focus{box-shadow:inset 0 0 0 2px #1ED760}.ds-field:focus-visible{outline:2px solid #1ED760;outline-offset:3px}.ds-field::placeholder{color:#B3B3B3}"
     },
     {
       "name": "Collection Filters",
       "kind": "nav",
-      "description": "Underline filter tabs; the selected state mirrors the collection.",
-      "html": "<div class=\"ds-filters\" role=\"tablist\"><button class=\"ds-tab\" role=\"tab\" aria-selected=\"true\">Songs</button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\">Playlists</button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\">Albums</button></div>",
-      "css": ".ds-filters{display:flex;gap:28px;flex-wrap:wrap;border-bottom:1px solid #DADACE}.ds-tab{min-height:48px;background:transparent;border:0;border-bottom:2px solid transparent;color:#687062;font:400 14px system-ui;cursor:pointer}.ds-tab[aria-selected=true]{border-bottom-color:#A74325;color:#A74325;font-weight:600}.ds-tab:focus-visible{outline:2px solid #A74325;outline-offset:3px}"
+      "refersTo": "filter-selected",
+      "description": "Scrollable rounded filters with neutral inverted selection.",
+      "html": "<div class=\"ds-filters\" role=\"tablist\"><button class=\"ds-filter\" role=\"tab\" aria-selected=\"true\">Songs</button><button class=\"ds-filter\" role=\"tab\" aria-selected=\"false\">Playlists</button></div>",
+      "css": ".ds-filters{display:flex;gap:8px;overflow:auto}.ds-filter{min-height:48px;padding:0 16px;border:0;border-radius:24px;background:#1F1F1F;color:#FFFFFF;font:400 14px system-ui;cursor:pointer;transition:background-color 160ms ease-out,color 160ms ease-out}.ds-filter[aria-selected=true]{background:#FFFFFF;color:#121212;font-weight:600}.ds-filter:focus-visible{outline:2px solid #1ED760;outline-offset:3px}@media(prefers-reduced-motion:reduce){.ds-filter{transition:none}}"
     },
     {
       "name": "Icon Button",
       "kind": "button",
-      "description": "Selected favorite icon with a circular touch target.",
+      "refersTo": "icon-button",
+      "description": "Selected favorite with a circular 48-unit touch target.",
       "html": "<button class=\"ds-icon\" aria-label=\"Remove from favorites\" aria-pressed=\"true\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z\"/></svg></button>",
-      "css": ".ds-icon{width:48px;min-height:48px;border:0;border-radius:24px;background:#F1DED2;color:#A74325;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}.ds-icon:focus-visible{outline:2px solid #A74325;outline-offset:3px}.ds-icon:disabled{opacity:.4}"
+      "css": ".ds-icon{width:48px;min-height:48px;border:0;border-radius:24px;background:#153A22;color:#1ED760;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}.ds-icon:focus-visible{outline:2px solid #1ED760;outline-offset:3px}.ds-icon:disabled{opacity:.4}"
     },
     {
       "name": "Sheet",
       "kind": "card",
       "refersTo": "sheet",
-      "description": "Static web sheet anatomy; native sheets align to the bottom. This preview does not emulate modal behavior.",
+      "description": "Static dark sheet anatomy; native aligns to the bottom, web centers. Preview does not emulate modal behavior.",
       "html": "<section class=\"ds-sheet\" aria-label=\"A new playlist\"><h2 class=\"ds-sheet-title\">A new playlist</h2><p class=\"ds-sheet-copy\">Give your next soundtrack a name.</p></section>",
-      "css": ".ds-sheet{width:min(540px,100%);max-height:92vh;overflow:auto;border-radius:16px;background:#FCFAF5;color:#292E27}.ds-sheet-title{margin:0;padding:22px 22px 12px;font:23px/30px Georgia,serif}.ds-sheet-copy{margin:0;padding:6px 24px 24px;color:#687062;font:14px/22px system-ui}"
+      "css": ".ds-sheet{width:min(540px,100%);max-height:92vh;overflow:auto;border-radius:16px;background:#121212;color:#FFFFFF}.ds-sheet-title{margin:0;padding:22px 22px 12px;font:700 23px/30px Arial,Helvetica,sans-serif}.ds-sheet-copy{margin:0;padding:6px 24px 24px;color:#B3B3B3;font:14px/22px system-ui}"
     },
     {
       "name": "Geometric Sleeve",
       "kind": "custom",
-      "description": "One resolved muted backing from the stable name-based placeholder palette; decorative, never album artwork.",
+      "description": "One resolved name-based saturated muted placeholder; decorative, never fetched album artwork.",
       "html": "<div class=\"ds-sleeve\" aria-hidden=\"true\"><div class=\"ds-record\"><i class=\"ds-groove ds-g1\"></i><i class=\"ds-groove ds-g2\"></i><i class=\"ds-groove ds-g3\"></i><span class=\"ds-label\"><b class=\"ds-hole\"></b></span></div></div>",
-      "css": ".ds-sleeve{width:156px;height:156px;background:#C5CDBA;border-radius:5px;display:flex;align-items:center;justify-content:center;overflow:hidden}.ds-record{position:relative;width:76%;height:76%;border-radius:50%;background:#30372F;display:flex;align-items:center;justify-content:center}.ds-groove{position:absolute;border:1px solid #4B5247;border-radius:50%}.ds-g1{width:64%;height:64%}.ds-g2{width:79%;height:79%}.ds-g3{width:93%;height:93%}.ds-label{width:32.895%;height:32.895%;border-radius:50%;background:#A74325;display:flex;align-items:center;justify-content:center}.ds-hole{width:4.68px;height:4.68px;border-radius:50%;background:#FCFAF5}"
+      "css": ".ds-sleeve{width:156px;height:156px;background:#377B69;border-radius:5px;display:flex;align-items:center;justify-content:center;overflow:hidden}.ds-record{position:relative;width:76%;height:76%;border-radius:50%;background:#181818;display:flex;align-items:center;justify-content:center}.ds-groove{position:absolute;border:1px solid #4B5247;border-radius:50%}.ds-g1{width:64%;height:64%}.ds-g2{width:79%;height:79%}.ds-g3{width:93%;height:93%}.ds-label{width:32.895%;height:32.895%;border-radius:50%;background:#1ED760;display:flex;align-items:center;justify-content:center}.ds-hole{width:4.68px;height:4.68px;border-radius:50%;background:#121212}"
     }
   ],
   "narrative": {
-    "northStar": "Record sleeve",
-    "overview": "Lilt uses the warmth of a personal record collection: ivory surfaces, dark green ink, burnt-orange actions, serif headings, and compact song rows. The sleeve metaphor shapes typography, material color, and geometric artwork placeholders; playback and navigation retain familiar controls.\n\nThe implemented system serves React Native on iOS and Android and React Native Web. This document records source-derived values and behavior, not a rendered acceptance review. Platform defaults supply body fonts and native text scaling.",
+    "northStar": "Your music, kept close",
+    "overview": "The November 2026 redesign follows the user's Spotify-style brief, superseding the earlier ivory, serif, and terracotta direction. Lilt retains its own name, logo, local library, offline playback, import tools, and converter integrations. Near-black inset panels, bold sans-serif hierarchy, green actions, rounded filters, and dense song rows make this an operating surface for choosing, organizing, downloading, and playing music.\n\nDark appearance is the default for new installations. Existing appearance preferences remain honored, including Device default and Light. The shared implementation serves React Native on iOS and Android and React Native Web.",
     "keyCharacteristics": [
-      "Warm ivory surfaces with ink text and selective burnt-orange emphasis.",
-      "Serif headings paired with practical system body text.",
-      "Flat tonal layers, fine dividers, and gently rounded controls.",
-      "Native safe areas and adaptive navigation around a persistent player dock.",
-      "Deterministic geometric sleeve placeholders and truthful empty states."
+      "Near-black panels and bright green playback actions.",
+      "Bold sans-serif headings and practical, scalable body text.",
+      "Flat tonal layering around a persistent player.",
+      "Adaptive navigation and deterministic geometric sleeve placeholders.",
+      "Truthful empty, downloading, failed, and saved states."
     ],
     "rules": [
       {
-        "name": "The Warm Paper Rule",
-        "body": "Use canvas, surface, and rail to establish hierarchy before adding decoration.",
+        "name": "The Shared Palette Rule",
+        "body": "Read colors from the active theme; pair every accent action with onAccent so both appearances remain readable.",
         "section": "colors"
+      },
+      {
+        "name": "The Persistent Playback Rule",
+        "body": "Keep playback available while navigating, and minimize the full-screen player without pausing.",
+        "section": "components"
+      },
+      {
+        "name": "The Durable Save Rule",
+        "body": "Show success only after the storage commit; progress and recovery actions must reflect application state.",
+        "section": "components"
       }
     ],
     "dos": [
-      "Do preserve the ivory, ink, and burnt-orange identity across native and web surfaces.",
-      "Do use the shared typography roles and platform display-font selection.",
-      "Do retain safe areas, labeled controls, scalable text, and at least 48-unit action targets.",
-      "Do use truthful empty states and explicit unavailable, loading, error, and saved states.",
-      "Do carry the same deterministic sleeve treatment through lists, dock, and expanded player."
+      "Do use the shared theme and typography roles across native and web.",
+      "Do retain safe areas, scalable text, accessible labels, keyboard operation, and minimum 48-unit action targets.",
+      "Do preserve collection order and truthful loading, error, unavailable, and saved states.",
+      "Do identify deterministic sleeves as placeholders rather than fetched album artwork."
     ],
     "donts": [
-      "Don't replace the approved identity with a Spotify-style visual theme.",
-      "Don't fabricate artists, songs, artwork, connected providers, or transfer success.",
-      "Don't add cast shadows or floating cards as the default hierarchy treatment.",
-      "Don't promote one surface's welcome composition or oversized heading into a universal screen template.",
-      "Don't treat this source-derived document as evidence of rendered or physical-device acceptance."
+      "Don't restore the superseded ivory, serif, and terracotta direction.",
+      "Don't fabricate songs, artists, artwork, connected providers, or transfer success.",
+      "Don't use browser screenshots as proof of native simulator or hardware acceptance.",
+      "Don't promote the first-import welcome composition into a universal screen template."
     ]
   }
 }

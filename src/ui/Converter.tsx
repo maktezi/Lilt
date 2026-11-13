@@ -13,7 +13,7 @@ import { useTheme } from './theme';
 type Phase = DownloadPhase;
 const titles: Record<Phase, string> = { connecting: 'Connecting to your song', verifying: 'Checking the audio source', preparing: 'Preparing your song', extracting: 'Preparing your audio', converting: 'Getting your audio ready', downloading: 'Downloading your song', saving: 'Saving to your collection', complete: 'Ready when you are' };
 
-export function Converter({ visible, playlistId, onMinimize, onUpdate, videoLink, quality, provider: initial, onClose, onDone, onDownload }: ConverterProps) {
+export function Converter({ visible, playlistId, onMinimize, onUpdate, videoLink, quality, provider: initial, onClose, onDone, onDownload, autoAdvance, batchLabel, onSkip }: ConverterProps) {
   const { colors: c, common: s } = useTheme();
   const [provider, setProvider] = useState(initial), [attempt, setAttempt] = useState(0);
   const [error, setError] = useState(''), [phase, setPhase] = useState<Phase>('connecting');
@@ -74,6 +74,11 @@ export function Converter({ visible, playlistId, onMinimize, onUpdate, videoLink
       if (mounted.current && !controller.signal.aborted && key === activePage.current) fail(cause instanceof Error ? cause.message : 'Could not save this song. Try again.');
     }
   }
+  useEffect(() => {
+    if (phase !== 'complete' || !autoAdvance) return;
+    const timer = setTimeout(onDone, 600);
+    return () => clearTimeout(timer);
+  }, [phase, autoAdvance, onDone]);
   const percent = downloadPercent(bytes.received, bytes.total);
   const visiblePercent = workerActive ? preparationPercent ?? 0 : percent;
   useEffect(() => { onUpdate({ title: songTitle, phase, percent: phase === 'complete' ? 100 : workerActive ? preparationPercent : percent, received: bytes.received, total: bytes.total, error: error || null, playlistId, jobId }); }, [songTitle, phase, workerActive, preparationPercent, percent, bytes.received, bytes.total, error, playlistId, jobId, onUpdate]);
@@ -100,7 +105,7 @@ export function Converter({ visible, playlistId, onMinimize, onUpdate, videoLink
         </View>}
     <Modal visible={visible} animationType={reduceMotion ? 'fade' : 'slide'} onRequestClose={onMinimize}>
     <SafeAreaView style={{ flex: 1, backgroundColor: c.surface }}>
-      <View style={[s.spread, { paddingHorizontal: 22, paddingVertical: 12 }]}><Text style={s.section}>Add to your music</Text><IconButton name="chevron-down" label="Minimize download" onPress={onMinimize} /></View>
+      <View style={[s.spread, { paddingHorizontal: 22, paddingVertical: 12 }]}><Text numberOfLines={2} style={[s.label, { flex: 1 }]}>{batchLabel || 'Add to your music'}</Text><IconButton name="chevron-down" label="Minimize download" onPress={onMinimize} /></View>
       <View style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1, backgroundColor: c.surface }} contentContainerStyle={{ flexGrow: 1, padding: 28, justifyContent: 'center', alignItems: 'center', gap: 18 }}>
           {error ? <View style={{ padding: 28 }}><Icon name="alert-circle" color={c.accent} size={52} /></View> : phase === 'complete' ? <View style={{ padding: 28 }}><Icon name="check-circle" color={c.green} size={60} /></View> :
@@ -122,7 +127,7 @@ export function Converter({ visible, playlistId, onMinimize, onUpdate, videoLink
           {error && !verificationFailed ? <Button label="Try again" icon="refresh-cw" onPress={() => restart(provider)} /> : null}
           {(error || workerActive) && <Button secondary={!verificationFailed} label={provider === 'flvto' ? verificationFailed ? 'Continue at 192 kbps' : 'Try fallback · 192 kbps' : `Try original source · ${quality === 192 ? 320 : quality} kbps`} onPress={() => restart(provider === 'flvto' ? 'ytmp3' : 'flvto')} />}
           {verificationFailed ? <Button quiet label="Retry selected quality" icon="refresh-cw" onPress={() => restart(provider)} /> : null}
-          <Button quiet label="Cancel download" onPress={close} />
+          {onSkip && error ? <Button secondary label="Skip song and continue" icon="skip-forward" onPress={onSkip} /> : null}<Button quiet label={batchLabel ? "Cancel remaining downloads" : "Cancel download"} onPress={close} />
         </>}
       </View>
     </SafeAreaView>

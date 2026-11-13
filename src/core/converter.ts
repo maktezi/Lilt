@@ -12,6 +12,7 @@ export function qualityForProvider(provider: ConverterProvider, requested: Audio
 export type ConverterProps = {
   videoLink: string; quality: AudioQuality; provider: ConverterProvider;
   visible: boolean;
+  autoAdvance?: boolean; batchLabel?: string; onSkip?: () => void;
   playlistId?: string;
   onMinimize: () => void;
   onUpdate: (summary: DownloadSummary | null) => void;
